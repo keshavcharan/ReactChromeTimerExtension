@@ -6,7 +6,9 @@ module.exports={
         index : './app/index.js',
         display : './app/formdisplay.js',
         bg : './app/background.js',
-        reactComponents : ['./app/reactComponents/optionsMenu.js']
+        vars : './app/paramsset.js',
+        main : './app/renderComponent.js',
+        reactComponents : ['./app/reactComponents/optionsMenu.js', './app/reactComponents/progressTimer.js']
     },
 	output : {
 		path : path.resolve(__dirname, 'dist'),
@@ -22,13 +24,13 @@ module.exports={
     plugins : [
         new HtmlWebpackPlugin ({
             file : 'index.html',
-            template : 'app/index.html',
-            chunks : ['index', 'bg']
-        }),
-        new HtmlWebpackPlugin ({
+            template : 'app/index.html'
+            //chunks : ['index', 'bg']
+        })
+/*        new HtmlWebpackPlugin ({
             filename : 'running.html',
             template : 'app/running.html',
             chunks : ['display']
         })
-    ]
+*/    ]
 }
