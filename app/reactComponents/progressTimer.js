@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+var params = require('../paramsset.js');
+var mainComponent = require('../renderComponent.js')
 
 class ProgressTimer extends React.Component {
 	constructor(props) {
@@ -16,9 +18,15 @@ class ProgressTimer extends React.Component {
 	}
 
 	countdown() {
-		this.setState ({
-			displaytime : this.getTimerTime()
-		});
+		var showtime = this.getTimerTime();
+		if(showtime < 0) {
+			params.inprogress = "true";
+			mainComponent.renderPage(params.inprogress, params.timertimes);
+		} else {
+			this.setState ({
+				displaytime : showtime
+			});
+		}
 	}
 	
 	componentWillUnmount() {

@@ -7,7 +7,7 @@ document.getElementById("nonameform").addEventListener("submit", function(e) {
 
 	params.inprogress = "false";	
 	params.timertimes.currentStartTime=new Date().getTime()/1000;
-	params.timertimes.currentTimeSet=hours*60*60;
+	params.timertimes.currentTimeSet=hours*6;
 
 	mainComponent.renderPage(params.inprogress, params.timertimes);
 });
