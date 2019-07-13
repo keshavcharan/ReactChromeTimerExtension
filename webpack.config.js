@@ -1,5 +1,6 @@
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports={
 	entry : {
@@ -26,7 +27,10 @@ module.exports={
             file : 'index.html',
             template : 'app/index.html'
             //chunks : ['index', 'bg']
-        })
+        }),
+         new CopyWebpackPlugin([
+            { from: 'static' }
+        ])
 /*        new HtmlWebpackPlugin ({
             filename : 'running.html',
             template : 'app/running.html',
