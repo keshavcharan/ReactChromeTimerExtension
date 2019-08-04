@@ -1,4 +1,4 @@
-var inprogress = "true"
+var inprogress = "false"
 var timertimes = {
 	currentStartTime:new Date().getTime()/1000,
 	currentTimeSet: 1

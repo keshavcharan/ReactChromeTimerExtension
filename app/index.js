@@ -1,4 +1,5 @@
-var mainComponent = require('./renderComponent.js')
-var params = require('./paramsset.js');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import AppComponent from './reactComponents/appComponent.js'
 
-mainComponent.renderPage(params.inprogress, params.timertimes);
+ReactDOM.render(<AppComponent/>, document.getElementById('app'))

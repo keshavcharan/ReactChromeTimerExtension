@@ -5,11 +5,16 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports={
 	entry : {
         index : './app/index.js',
-        display : './app/formdisplay.js',
-        bg : './app/background.js',
         vars : './app/paramsset.js',
-        main : './app/renderComponent.js',
-        reactComponents : ['./app/reactComponents/optionsMenu.js', './app/reactComponents/progressTimer.js']
+        nex: './app/nextform.js',
+/*        ac:'./app/reactComponents/appComponent.js',
+        pt: './app/reactComponents/progressTimer.js',
+        sb: './app/reactComponents/submitbutton.js',
+        om: './app/reactComponents/optionsMenu.js',*/
+        reactComponents : ['./app/reactComponents/appComponent.js',
+                            './app/reactComponents/submitbutton.js', 
+                            './app/reactComponents/optionsMenu.js', 
+                            './app/reactComponents/progressTimer.js']
     },
 	output : {
 		path : path.resolve(__dirname, 'dist'),

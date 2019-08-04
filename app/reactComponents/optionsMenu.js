@@ -10,7 +10,7 @@ class OptionMenu extends React.Component {
 	render() {
 		var opts = this.state.options.map(function(opt) {
 			return (
-				<option value="{opt.value}"> {opt.key} </option>
+				<option value={opt.value}> {opt.key} </option>
 				);
 		});
 
