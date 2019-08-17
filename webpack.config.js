@@ -14,17 +14,24 @@ module.exports={
         reactComponents : ['./app/reactComponents/appComponent.js',
                             './app/reactComponents/submitbutton.js', 
                             './app/reactComponents/optionsMenu.js', 
+                            './app/reactComponents/mainComponent.js',
+                            './app/reactComponents/routerComponent.js',
+                            './app/reactComponents/homeComponent.js',
                             './app/reactComponents/progressTimer.js']
     },
 	output : {
 		path : path.resolve(__dirname, 'dist'),
-		filename : '[name]_bundle.js'
+		filename : '[name]_bundle.js',
+        publicPath: '/'
 	},
 	module : {
         rules : [
             {test : /\.(js)$/, use:'babel-loader'},
             {test : /\.css$/, use:['style-loader', 'css-loader']}
         ]
+    },
+    devServer: {
+        historyApiFallback: true,
     },
     mode:'development',
     plugins : [
