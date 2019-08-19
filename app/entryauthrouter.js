@@ -1,23 +1,25 @@
 import React, { Component } from 'react'
-import RouterComponent from './routerComponent.js'
 import { withRouter } from 'react-router-dom' 
 import { Redirect } from 'react-router' 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import LoginRouter from './loginRouter.js'
 
-class MainComponent extends React.Component {
+var loginset = require('./referenceVars/loginsettings.js')
+
+class EntryAuthRouter extends React.Component {
 	
 	constructor(props) {
 		super()
 	}
 
-	render() {
+	render() {	
 		return(
 			<div>
-				<RouterComponent/>
-				<Link to='/timr'> Timer </Link>
+				<LoginRouter renderauthrouter="true"/>				
 			</div>
 		)
 	}
 }
 
-export default withRouter(MainComponent)
+
+export default withRouter(EntryAuthRouter)

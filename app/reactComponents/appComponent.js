@@ -1,9 +1,14 @@
 import React, {Component} from 'react'
-import NextForm from '../nextform.js'
+import NextForm from './nextform.js'
 import ProgressTimer from './progressTimer.js'
-var params = require('../paramsset.js');
+import { withRouter } from 'react-router-dom' 
+import { Redirect } from 'react-router' 
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
-export default class AppComponent extends React.Component {
+
+var params = require('../referenceVars/paramsset.js');
+
+class AppComponent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -37,7 +42,7 @@ export default class AppComponent extends React.Component {
 		if(params.inprogress == "false") {
 			renderform = <NextForm submitFormCallback={this.onFormSubmit}/>;
 		} else {
-			renderform = <ProgressTimer timerCallback={this.backToForm} starttime={params.timertimes.currentStartTime} times={params.timertimes.currentTimeSet} />;
+			renderform = <ProgressTimer timerCallback={this.backToForm} starttime={params.timertimes.currentStartTime} times={params.timertimes.currentTimeSet}/>;
 		}
 
 		return(
@@ -47,3 +52,5 @@ export default class AppComponent extends React.Component {
 		)
 	}
 }
+
+export default withRouter(AppComponent)

@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MainComponent from './reactComponents/mainComponent.js'
-import { BrowserRouter } from 'react-router-dom';
+import EntryPoint from './entrypoint.js'
 
-ReactDOM.render(<BrowserRouter><MainComponent/></BrowserRouter>, document.getElementById('app'))
+ReactDOM.render(<EntryPoint/>, document.getElementById('app'))

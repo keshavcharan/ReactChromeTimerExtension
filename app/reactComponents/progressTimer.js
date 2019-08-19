@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-var params = require('../paramsset.js');
+var params = require('../referenceVars/paramsset.js');
 //var mainComponent = require('../renderComponent.js')
 
 class ProgressTimer extends React.Component {
