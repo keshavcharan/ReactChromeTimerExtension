@@ -5,7 +5,6 @@ import OptionMenu from './optionsMenu.js'
 import Form from 'react-bootstrap/Form'
 import SubmitButton from './submitbutton.js'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CheckSession from '../checksession.js'
 import { withRouter } from 'react-router-dom' 
 
 var loginset = require('../referenceVars/loginsettings.js')

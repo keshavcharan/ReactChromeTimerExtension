@@ -15,7 +15,7 @@ class EntryAuthRouter extends React.Component {
 	render() {	
 		return(
 			<div>
-				<LoginRouter renderauthrouter="true"/>				
+				<LoginRouter/>				
 			</div>
 		)
 	}

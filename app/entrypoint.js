@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import AppComponent from './reactComponents/appComponent.js'
-import EntryAuthRouter from './entryauthrouter.js'
+import AuthRouter from './authrouter.js'
 
-var loginset = require('./referenceVars/loginsettings.js')
 import { BrowserRouter } from 'react-router-dom';
 
 export default class EntryPoint extends React.Component {
@@ -12,12 +11,10 @@ export default class EntryPoint extends React.Component {
 	}
 
 	render() {
-		const loggedIn = loginset.isLoggedIn;
-		console.log('entry point')
-		return(
-			<BrowserRouter>
-				<EntryAuthRouter/>							
-			</BrowserRouter>
-		)
+		return (
+			<div>
+				<AuthRouter/>							
+			</div>
+		);
 	}
 }

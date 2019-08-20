@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 var loginset = require('./referenceVars/loginsettings.js')
 
-class LoginForm extends React.Component {
+class Authenticator extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -18,14 +18,15 @@ class LoginForm extends React.Component {
 
 	handleSubmit(event) {
 		event.preventDefault();
-		console.log("setting log")
 		loginset.isLoggedIn = "true"
-		this.props.history.push('/auth')
+		const {	history } = this.props
+		console.log("setting log " + history)
+		history.push('/')
 	}
 
 	render() {
-		console.log('login form')
-		return(
+		console.log('Authenticator')
+		return (
 				<div>					
 					<Form id="loginform" onSubmit={this.handleSubmit}>
 						<Form.Group>
@@ -41,4 +42,4 @@ class LoginForm extends React.Component {
 
 }
 
-export default withRouter(LoginForm)
+export default withRouter(Authenticator)
