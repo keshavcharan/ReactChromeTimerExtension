@@ -19,7 +19,7 @@ class PrivateRoute extends React.Component {
 	}
 
 	componentDidMount() {		
-		console.log("yyyy")
+		console.log(loginset.isLoggedIn)		
 		if(loginset.isLoggedIn == "true") {
 			this.setState ({loaded : true, authenticated : true})
 		} else {
@@ -30,7 +30,6 @@ class PrivateRoute extends React.Component {
 			if(loginset.isLoggedIn == "false") {
 				this.setState ({loaded : false, authenticated : false})
 			} 			
-			console.log("xxxxxx " + loginset.isLoggedIn)
 		});
 	}
 
@@ -42,8 +41,7 @@ class PrivateRoute extends React.Component {
 		const { component : Component, ...rest } = this.props
 		const { loaded, authenticated } = this.state
 		if(!loaded)	return null
-		console.log("rendering authenticator " + authenticated + " " +loaded)		
-
+		
 		return (
 			<Route {...rest} render = {
 				(props) => (authenticated ==true ? (<Component {...props} />) : (<Redirect to='/auth'/>) )

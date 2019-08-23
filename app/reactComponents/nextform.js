@@ -21,7 +21,6 @@ class NextForm extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
 		this.handleTimerValueChange = this.handleTimerValueChange.bind(this);
-		this.logoutsess = this.logoutsess.bind(this);
 	}
 
 	handleSubmit(event) {
@@ -37,12 +36,6 @@ class NextForm extends React.Component {
 
 	handleTimerValueChange(event) {
 		this.setState( { timertime: event.target.value })
-	}
-
-	logoutsess(event) {
-		event.preventDefault();
-		loginset.isLoggedIn = "false";
-		this.props.history.push('/auth')	
 	}
 
 	render() {
@@ -63,7 +56,6 @@ class NextForm extends React.Component {
 							<OptionMenu/>
 						</Form.Group>
 						<Form.Group sm={{ span: 10, offset: 2}}>
-							<button  onClick={this.logoutsess}> LogOut </button>
 							<SubmitButton label="Set" />
 						</Form.Group>					
 					</Form>
