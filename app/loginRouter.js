@@ -11,6 +11,7 @@ class LoginRouter extends React.Component {
 	}
 
 	render() {
+		console.log("rendering")
 		return(
 			<div>
 				<Header/>

@@ -1,20 +1,13 @@
-import React, { Component } from 'react'
-import AppComponent from './reactComponents/appComponent.js'
 import AuthRouter from './authrouter.js'
+import  { FirebaseContext } from './firebaseInstance.js';
+import React from 'react'
 
-import { BrowserRouter } from 'react-router-dom';
+const EntryPoint = () => (
+  <FirebaseContext.Consumer>
+    {firebase => {
+      return <AuthRouter firebaseClass={firebase}/>
+    }}
+  </FirebaseContext.Consumer>
+);
 
-export default class EntryPoint extends React.Component {
-	
-	constructor(props) {
-		super()
-	}
-
-	render() {
-		return (
-			<div>
-				<AuthRouter/>							
-			</div>
-		);
-	}
-}
+export default EntryPoint;

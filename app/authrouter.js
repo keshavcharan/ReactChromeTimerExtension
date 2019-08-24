@@ -5,21 +5,25 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import LoginRouter from './loginRouter.js'
 import LogoutRouter from './logoutrouter.js'
 import Authenticator from './authenticator.js'
-
+import { FirebaseContext } from './firebaseInstance.js'
 var loginset = require('./referenceVars/loginsettings.js')
+
 
 class PrivateRoute extends React.Component {
 	
 	constructor(props) {
-		super()
+		super(props)
 		this.state = {
 			loaded : false,
 			authenticated : false
 		}
+		this.firebaseComp = this.props.firebaseComp
 	}
 
-	componentDidMount() {		
-		console.log(loginset.isLoggedIn)		
+	componentDidMount() {	
+			console.log("component mounted " + this.firebaseComp)		
+		console.log(loginset.isLoggedIn)	
+
 		if(loginset.isLoggedIn == "true") {
 			this.setState ({loaded : true, authenticated : true})
 		} else {
@@ -40,12 +44,13 @@ class PrivateRoute extends React.Component {
 	render() {
 		const { component : Component, ...rest } = this.props
 		const { loaded, authenticated } = this.state
+		console.log('rendering' + loaded + authenticated)
 		if(!loaded)	return null
 		
 		return (
 			<Route {...rest} render = {
-				(props) => (authenticated ==true ? (<Component {...props} />) : (<Redirect to='/auth'/>) )
-			} />
+					(props) => (authenticated ==true ? (<Component {...props} />) : (<Redirect to='/auth'/>) )
+				} />			
 		)
 	}
 
@@ -54,16 +59,22 @@ class PrivateRoute extends React.Component {
 
 PrivateRoute=withRouter(PrivateRoute)
 
-const Routes = () => (
-	<Router>
-		<div>
-		<Switch>
-			<Route path='/auth' component={Authenticator}/>
-			<PrivateRoute path='/logout' component={LogoutRouter}/>			
-			<PrivateRoute path='/' component={LoginRouter}/>			
-		</Switch>
-		</div>
-	</Router>
-)
-
+class Routes extends React.Component {
+	constructor(props) {
+		super(props)		
+	}
+	render() {
+		return (
+			<Router>
+				<div>
+				<Switch>
+					<Route path='/auth' component={Authenticator}/>				
+						<PrivateRoute firebaseComp={this.props.firebaseClass} path='/logout' component={LogoutRouter}/>
+						<PrivateRoute firebaseComp={this.props.firebaseClass} path='/' component={LoginRouter}/>	
+				</Switch>
+				</div>
+			</Router>
+		)
+	}
+}
 export default Routes

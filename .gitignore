@@ -1,3 +1,4 @@
 dist/**
 node_modules/**
 *.bkp
+app/referenceVars/firebaseConfig.js
