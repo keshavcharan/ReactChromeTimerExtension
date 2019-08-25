@@ -21,7 +21,7 @@ class PrivateRoute extends React.Component {
 	}
 
 	componentDidMount() {	
-			console.log("component mounted " + this.firebaseComp)		
+		console.log("component mounted " + this.firebaseComp)		
 		console.log(loginset.isLoggedIn)	
 
 		if(loginset.isLoggedIn == "true") {
@@ -68,7 +68,7 @@ class Routes extends React.Component {
 			<Router>
 				<div>
 				<Switch>
-					<Route path='/auth' component={Authenticator}/>				
+					<Route path='/auth' render={(props) => <Authenticator firebaseComp={this.props.firebaseClass}/>} />				
 						<PrivateRoute firebaseComp={this.props.firebaseClass} path='/logout' component={LogoutRouter}/>
 						<PrivateRoute firebaseComp={this.props.firebaseClass} path='/' component={LoginRouter}/>	
 				</Switch>

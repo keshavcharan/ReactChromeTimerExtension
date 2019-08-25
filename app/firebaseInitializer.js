@@ -2,34 +2,29 @@ import React, {	Component } from 'react'
 import app from 'firebase/app'
 
 var firebase = require('firebase');
-var firebaseSonfigComp = require('./referenceVars/firebaseConfig')
-const firebaseConfig = firebaseSonfigComp.firebaseConfig
+var firebaseConfigComp = require('./referenceVars/firebaseConfig')
+const firebaseConfig = firebaseConfigComp.firebaseConfig
 
 
-export default class FirebaseInitializer extends React.Component{
-	constructor(props) {
-    super(props)
+export default class FirebaseInitializer{	
+  constructor() {
     console.log(firebaseConfig)
     if(!firebase.apps.length) {
 	     app.initializeApp(firebaseConfig);
     }
-    this.auth = app.auth();    
-    this.signin=this.signin.bind(this)
+    this.auth = app.auth();        
 	}
 
-
-  signin(email, password){
-      this.auth.signInWithEmailAndPassword(email, password).
-      catch(function(error) {
-              console.log("authentication error")
-              var errorCode = error.code;
-              var errorMessage = error.message;     
-            }
-          );
+  signin(email, password) {
+      return this.auth.signInWithEmailAndPassword(email, password);
   }
 
-  render() {
-    return(null);
+  printuser() {
+    console.log('printing user ')
+    if(this.auth) {
+      console.log('current user is ')
+      console.log(this.auth.currentUser.email)  
+    }
+    
   }
-
 }
