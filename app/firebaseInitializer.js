@@ -12,11 +12,43 @@ export default class FirebaseInitializer{
     if(!firebase.apps.length) {
 	     app.initializeApp(firebaseConfig);
     }
-    this.auth = app.auth();        
+    this.auth = app.auth();      
+    this.isLoggedIn = false        
 	}
 
+  registerAuthListener() {
+    console.log("Registering Auth Listener : isLogged In " + this.isLoggedIn)
+    return this.auth.onAuthStateChanged(user => {
+        console.log("Listener called")
+        if (user) { 
+          console.log("Logged in as " + user.email)
+          this.isLoggedIn=true
+        } else {
+          console.log("Not Authenticated")
+          this.isLoggedIn=false
+        }
+    })
+  }
+
+  getUser() {
+    return this.auth.currentUser
+  }
+
   signin(email, password) {
-      return this.auth.signInWithEmailAndPassword(email, password);
+    return this.auth.signInWithEmailAndPassword(email, password);
+  }
+
+  signup(email, password) {
+    return this.auth.createUserWithEmailAndPassword(email, password);
+  }
+
+  signout() {
+    return this.auth.signout()
+  }
+
+  isUserLoggedIn() {
+    console.log("FirebaseInitializer isLoggedIn ? => " + this.isLoggedIn)
+    return this.isLoggedIn
   }
 
   printuser() {

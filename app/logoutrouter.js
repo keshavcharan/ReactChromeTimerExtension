@@ -4,25 +4,24 @@ import Form from 'react-bootstrap/Form'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SubmitButton from './reactComponents/submitbutton.js'
 
-var loginset = require('./referenceVars/loginsettings.js')
-
 class LogoutRouter extends React.Component {
 	
 	constructor(props) {
-		super()
+		super(props)
 		this.handleLogout = this.handleLogout.bind(this);
+		this.firebaseComp = this.props.firebaseComp		
 	}
 
 	handleLogout(event) {
 		event.preventDefault()
-		console.log("Handle logout")
-		loginset.isLoggedIn="false"
-		this.props.history.push('/auth')		
+		console.log("Handle logout " + this.firebaseComp)
+		this.firebaseComp.logout().
+				then(console.log("Logout success")).
+				catch(error => console.log("Logout Failed " + error.code + " " + error.message))				
+		this.props.history.push('/')		
 	}
 
 	render() {
-		var loggedIn = loginset.isLoggedIn
-		console.log('login router - loggedIn ' + loggedIn)
 		return(
 			<div>
 				<div>					

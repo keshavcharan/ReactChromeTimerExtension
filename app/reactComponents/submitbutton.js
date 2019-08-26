@@ -9,9 +9,14 @@ export default class SubmitButton extends React.Component {
 	}
 
 	render() {
+		var disablebutton = this.props.disable
+		if(!disablebutton) {
+			disablebutton = false
+		}
+
 		return (
 			<ButtonToolbar>
-				<Button variant="success" type="submit"> {this.props.label} </Button>
+				<Button variant="success" type="submit" disabled={disablebutton}> {this.props.label} </Button>
 			</ButtonToolbar>
 		)
 	}

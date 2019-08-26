@@ -7,7 +7,7 @@ import Header from './header.js'
 class LoginRouter extends React.Component {
 	
 	constructor(props) {
-		super()
+		super(props)
 	}
 
 	render() {

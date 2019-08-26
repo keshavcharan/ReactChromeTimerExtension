@@ -6,8 +6,7 @@ import LoginRouter from './loginRouter.js'
 import LogoutRouter from './logoutrouter.js'
 import Authenticator from './authenticator.js'
 import { FirebaseContext } from './firebaseInstance.js'
-var loginset = require('./referenceVars/loginsettings.js')
-
+import SignUp from './signup'
 
 class PrivateRoute extends React.Component {
 	
@@ -22,29 +21,31 @@ class PrivateRoute extends React.Component {
 
 	componentDidMount() {	
 		console.log("component mounted " + this.firebaseComp)		
-		console.log(loginset.isLoggedIn)	
-
-		if(loginset.isLoggedIn == "true") {
+		var loggedIn = this.firebaseComp.isUserLoggedIn()
+		if(loggedIn) {
+			console.log("Mounting initial component - User Authenticated ")
 			this.setState ({loaded : true, authenticated : true})
 		} else {
+			console.log("Mounting initial component - User not Authenticated")
 			this.props.history.push('/auth')
 		}
 
 		this.unlisten = this.props.history.listen(() => {			
-			if(loginset.isLoggedIn == "false") {
+			console.log("Checking history listener")
+			if(!this.firebaseComp.isUserLoggedIn()) {
+				console.log("User not present")
 				this.setState ({loaded : false, authenticated : false})
 			} 			
 		});
 	}
 
 	componentWillUnmount() {
-		this.unlisten()
+		this.unlisten()		
 	}
 
 	render() {
 		const { component : Component, ...rest } = this.props
-		const { loaded, authenticated } = this.state
-		console.log('rendering' + loaded + authenticated)
+		const { loaded, authenticated } = this.state		
 		if(!loaded)	return null
 		
 		return (
@@ -69,8 +70,8 @@ class Routes extends React.Component {
 				<div>
 				<Switch>
 					<Route path='/auth' render={(props) => <Authenticator firebaseComp={this.props.firebaseClass}/>} />				
-						<PrivateRoute firebaseComp={this.props.firebaseClass} path='/logout' component={LogoutRouter}/>
-						<PrivateRoute firebaseComp={this.props.firebaseClass} path='/' component={LoginRouter}/>	
+					<Route path='/signup' render={(props) => <SignUp firebaseComp={this.props.firebaseClass}/>} />
+					<PrivateRoute firebaseComp={this.props.firebaseClass} path='/' component={LoginRouter}/>						
 				</Switch>
 				</div>
 			</Router>

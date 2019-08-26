@@ -2,17 +2,23 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom' 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import LogoutRouter from './logoutrouter.js'
+import  { FirebaseContext } from './firebaseInstance.js';
 
 class Header extends React.Component {
 	
 	constructor(props) {
-		super()
+		super(props)
+
 	}
 
 	render() {
 		return(
 			<div>
-				<LogoutRouter/>
+			  <FirebaseContext.Consumer>
+			    {firebase => {
+			      <LogoutRouter firebaseComp={firebase}/>
+			    }}
+			  </FirebaseContext.Consumer>
 			</div>
 		)
 	}
