@@ -14,11 +14,7 @@ class Header extends React.Component {
 	render() {
 		return(
 			<div>
-			  <FirebaseContext.Consumer>
-			    {firebase => {
-			      <LogoutRouter firebaseComp={firebase}/>
-			    }}
-			  </FirebaseContext.Consumer>
+		      	<LogoutRouter firebaseComp={this.props.firebaseComp}/>
 			</div>
 		)
 	}

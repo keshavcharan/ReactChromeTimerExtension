@@ -18,6 +18,14 @@ class Authenticator extends React.Component {
 		this.onChange=this.onChange.bind(this)
 	}
 
+	componentDidMount() {	
+		if(this.firebaseComp.isUserLoggedIn()) {
+			console.log("User not present")
+			const {	history } = this.props
+			history.push('/')
+		} 			
+	}
+
 	handleSubmit(event) {
 		event.preventDefault();
 		var email = this.state.username
@@ -44,7 +52,6 @@ class Authenticator extends React.Component {
 		var username = this.state.username
 		var password = this.state.password
 		const invalid = username === "" || password === ""
-		console.log('Login Form rerender - user ' + username + ' ' + password + ' ' + invalid)
 		return (
 				<div>	
 					<Form id="loginform" onSubmit={this.handleSubmit}>

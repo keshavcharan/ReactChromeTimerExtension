@@ -5,32 +5,18 @@ var firebase = require('firebase');
 var firebaseConfigComp = require('./referenceVars/firebaseConfig')
 const firebaseConfig = firebaseConfigComp.firebaseConfig
 
-
 export default class FirebaseInitializer{	
   constructor() {
     console.log(firebaseConfig)
     if(!firebase.apps.length) {
 	     app.initializeApp(firebaseConfig);
     }
-    this.auth = app.auth();      
-    this.isLoggedIn = false        
-	}
+    console.log('contructor')
+    this.auth = app.auth(); 
+    this.loggedIn = false;     
+	} 
 
-  registerAuthListener() {
-    console.log("Registering Auth Listener : isLogged In " + this.isLoggedIn)
-    return this.auth.onAuthStateChanged(user => {
-        console.log("Listener called")
-        if (user) { 
-          console.log("Logged in as " + user.email)
-          this.isLoggedIn=true
-        } else {
-          console.log("Not Authenticated")
-          this.isLoggedIn=false
-        }
-    })
-  }
-
-  getUser() {
+  getUser() { 
     return this.auth.currentUser
   }
 
@@ -42,21 +28,30 @@ export default class FirebaseInitializer{
     return this.auth.createUserWithEmailAndPassword(email, password);
   }
 
-  signout() {
-    return this.auth.signout()
+  async signout() {
+    console.log('signing out');
+    await new Promise((resolve, reject) => {this.auth.signOut(); resolve(), reject}).
+          then(() => {
+                console.log("Logout succeess"); 
+                this.loggedIn = false
+              }). catch(() => {
+                console.log("Logout failed")
+              });
+
+  }
+
+  async logout() {
+    console.log('log out');
+    return this.auth.signOut();
   }
 
   isUserLoggedIn() {
-    console.log("FirebaseInitializer isLoggedIn ? => " + this.isLoggedIn)
-    return this.isLoggedIn
+    return this.loggedIn
   }
 
-  printuser() {
-    console.log('printing user ')
-    if(this.auth) {
-      console.log('current user is ')
-      console.log(this.auth.currentUser.email)  
-    }
-    
-  }
+  setLoggedIn(loggedIn) {
+    console.log('setting loggedIn to ' + loggedIn);
+    this.loggedIn = loggedIn
+   }
+
 }

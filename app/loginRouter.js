@@ -14,11 +14,11 @@ class LoginRouter extends React.Component {
 		console.log("rendering")
 		return(
 			<div>
-				<Header/>
+				<Header firebaseComp={this.props.firebaseComp}/>
 				<AppComponent/>
 			</div>
 		)
 	}
 }
 
-export default withRouter(LoginRouter)
+export default withRouter(LoginRouter) 

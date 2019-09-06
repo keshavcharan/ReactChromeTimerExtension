@@ -2,6 +2,7 @@ import AuthRouter from './authrouter.js'
 import  { FirebaseContext } from './firebaseInstance.js';
 import React from 'react'
 
+
 const EntryPoint = () => (
   <FirebaseContext.Consumer>
     {firebase => {

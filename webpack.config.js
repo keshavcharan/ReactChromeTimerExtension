@@ -4,7 +4,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports={
 	entry : {
-        index : './app/index.js',
+        index : ['babel-polyfill','./app/index.js'],
         vars : [ './app/referenceVars/paramsset.js', './app/referenceVars/loginsettings.js' ],
         nex:  ['./app/loginform.js', './app/loginRouter.js', './app/logoutrouter.js', './app/authenticator.js'],
         reactComponents : ['./app/reactComponents/appComponent.js',
@@ -22,7 +22,7 @@ module.exports={
 	module : {
         rules : [
             {test : /\.(js)$/, use:'babel-loader'},
-            {test : /\.css$/, use:['style-loader', 'css-loader']}
+            {test : /\.css$/, use:['style-loader', 'css-loader']},
         ]
     },
     devServer: {

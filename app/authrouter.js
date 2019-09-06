@@ -17,11 +17,13 @@ class PrivateRoute extends React.Component {
 			authenticated : false
 		}
 		this.firebaseComp = this.props.firebaseComp
+		this.stopTimer = false
 	}
 
 	componentDidMount() {	
-		console.log("component mounted " + this.firebaseComp)		
+		console.log("component mounted " + this.firebaseComp)
 		var loggedIn = this.firebaseComp.isUserLoggedIn()
+		console.log("done calling userloggedIn")
 		if(loggedIn) {
 			console.log("Mounting initial component - User Authenticated ")
 			this.setState ({loaded : true, authenticated : true})
@@ -50,7 +52,7 @@ class PrivateRoute extends React.Component {
 		
 		return (
 			<Route {...rest} render = {
-					(props) => (authenticated ==true ? (<Component {...props} />) : (<Redirect to='/auth'/>) )
+					(props) => (authenticated ==true ? (<Component {...props} firebaseComp={this.props.firebaseComp}/>) : (<Redirect to='/auth'/>) )
 				} />			
 		)
 	}
@@ -65,6 +67,7 @@ class Routes extends React.Component {
 		super(props)		
 	}
 	render() {
+		console.log('Login form render')
 		return (
 			<Router>
 				<div>
