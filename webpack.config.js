@@ -6,7 +6,7 @@ module.exports={
 	entry : {
         index : ['babel-polyfill','./app/index.js'],
         vars : [ './app/referenceVars/paramsset.js', './app/referenceVars/loginsettings.js' ],
-        nex:  ['./app/loginform.js', './app/loginRouter.js', './app/logoutrouter.js', './app/authenticator.js'],
+        nex:  ['./app/loginPageTest.js', './app/loginRoute.js', './app/entrypoint.js', './app/routes.js', './app/appRoute.js', './app/appHomeTest.js'],
         reactComponents : ['./app/reactComponents/appComponent.js',
                             './app/reactComponents/nextform.js',
                             './app/reactComponents/optionsMenu.js', 

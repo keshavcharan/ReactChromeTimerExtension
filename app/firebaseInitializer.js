@@ -28,16 +28,9 @@ export default class FirebaseInitializer{
     return this.auth.createUserWithEmailAndPassword(email, password);
   }
 
-  async signout() {
+  signout() {
     console.log('signing out');
-    await new Promise((resolve, reject) => {this.auth.signOut(); resolve(), reject}).
-          then(() => {
-                console.log("Logout succeess"); 
-                this.loggedIn = false
-              }). catch(() => {
-                console.log("Logout failed")
-              });
-
+    this.auth.signOut(); 
   }
 
   async logout() {

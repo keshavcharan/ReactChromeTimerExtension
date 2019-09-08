@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import EntryPoint from './entrypoint.js'
-
 import Firebase, {	FirebaseContext } from './firebaseInstance.js'
-
+import PushHistory from './pushHistory.js'
 var fb = new Firebase()
+console.log('in index.js');
+
 async function initializeFirebase() {
 	console.log("Init index");
     await new Promise((resolve, reject) => { 
-    	fb.auth.onAuthStateChanged(user => {
+    	var unsubscribe = fb.auth.onAuthStateChanged(user => {
     		//unsubscribe();
     		resolve(user);
 	        console.log("Listener called")
@@ -19,15 +20,16 @@ async function initializeFirebase() {
 	        	fb.setLoggedIn(false)
 	          	console.log("Not Authenticated")
 	        }
+	    	console.log("Init exit : rendering entry point");
+		    ReactDOM.render(
+		    	<div>
+					<EntryPoint firebaseclass={fb}/>
+				</div>, 
+			document.getElementById('app'));	
+    		unsubscribe();		
     	}, reject);
 	});
-    console.log("Init exit");
-    ReactDOM.render(
-    			<FirebaseContext.Provider value={fb}> 
-					<EntryPoint />
-				</FirebaseContext.Provider>, 
-				document.getElementById('app'));
+
 }
 
 initializeFirebase()
-

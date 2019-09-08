@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import AppComponent from './reactComponents/appComponent.js'
 import Header from './header.js'
 
-class LoginRouter extends React.Component {
+class AppHomePage extends React.Component {
 	
 	constructor(props) {
 		super(props)
@@ -14,11 +14,12 @@ class LoginRouter extends React.Component {
 		console.log("rendering")
 		return(
 			<div>
-				<Header firebaseComp={this.props.firebaseComp}/>
-				<AppComponent/>
+				<div>
+					Loading AppHomePage
+				</div>
 			</div>
 		)
 	}
 }
 
-export default withRouter(LoginRouter) 
+export default withRouter(AppHomePage) 

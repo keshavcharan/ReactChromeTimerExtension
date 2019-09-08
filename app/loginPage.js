@@ -8,7 +8,7 @@ import { Redirect } from 'react-router'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import FirebaseInitializer from './firebaseInitializer.js'
 
-class Authenticator extends React.Component {
+class LoginPage extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -19,11 +19,7 @@ class Authenticator extends React.Component {
 	}
 
 	componentDidMount() {	
-		if(this.firebaseComp.isUserLoggedIn()) {
-			console.log("User not present")
-			const {	history } = this.props
-			history.push('/')
-		} 			
+
 	}
 
 	handleSubmit(event) {
@@ -74,4 +70,4 @@ class Authenticator extends React.Component {
 
 }
 
-export default withRouter(Authenticator)
+export default LoginPage

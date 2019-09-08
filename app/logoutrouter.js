@@ -12,11 +12,9 @@ class LogoutRouter extends React.Component {
 		this.firebaseComp = this.props.firebaseComp		
 	}
 
-	async handleLogout(event) {
+	handleLogout(event) {
 		event.preventDefault()
-		await this.firebaseComp.logout()				
-		console.log('pushing back')				
-		this.props.history.push('/')		
+		this.firebaseComp.signout()				
 	}
 
 	render() {
