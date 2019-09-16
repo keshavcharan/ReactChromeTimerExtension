@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import NextForm from './nextform.js'
-import ProgressTimer from './progressTimer.js'
+import ProgressTimer from '../reactComponents/progressTimer.js'
 import { withRouter } from 'react-router-dom' 
 import { Redirect } from 'react-router' 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'

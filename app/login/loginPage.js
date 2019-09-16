@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import './index.css';
+import '../index.css';
 import Form from 'react-bootstrap/Form'
-import SubmitButton from './reactComponents/submitbutton.js'
+import SubmitButton from '../reactComponents/submitbutton.js'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withRouter } from 'react-router-dom' 
 import { Redirect } from 'react-router' 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import FirebaseInitializer from './firebaseInitializer.js'
+import FirebaseInitializer from '../firebase/firebaseInitializer.js'
 
 class LoginPage extends React.Component {
 
@@ -19,7 +19,13 @@ class LoginPage extends React.Component {
 	}
 
 	componentDidMount() {	
+		console.log('login page mounted')
+	}
 
+	onChange(event) {
+		var key = event.target.name
+		var value = event.target.value
+		this.setState({	[key] : value })
 	}
 
 	handleSubmit(event) {
@@ -33,15 +39,6 @@ class LoginPage extends React.Component {
               var errorMessage = error.message;     
             }
       	);
-				
-		const {	history } = this.props
-		history.push('/')
-	}
-
-	onChange(event) {
-		var key = event.target.name
-		var value = event.target.value
-		this.setState({	[key] : value })
 	}
 
 	render() {
@@ -56,13 +53,10 @@ class LoginPage extends React.Component {
 						</Form.Group>
 						<Form.Group>
 							<Form.Control id="pswd" name="password" type="password" placeholder="Password" onChange={this.onChange}/>
-						</Form.Group>						
+						</Form.Group>		
 						<Form.Group sm={{ span: 10, offset: 2}}>
 							<SubmitButton label="Login" disable={invalid}/>
-						</Form.Group>		
-						<br/>
-						<br/>
-						<Link to="/signup">New User - Sign Up</Link>						
+						</Form.Group>															
 					</Form>
 				</div>
 		) 
@@ -70,4 +64,4 @@ class LoginPage extends React.Component {
 
 }
 
-export default LoginPage
+export default withRouter(LoginPage)

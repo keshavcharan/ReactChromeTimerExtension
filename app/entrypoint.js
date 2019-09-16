@@ -1,5 +1,5 @@
 import Routes from './routes.js'
-import  { FirebaseContext } from './firebaseInstance.js';
+import  { FirebaseContext } from './firebase/firebaseInstance.js';
 import React from 'react'
 
 

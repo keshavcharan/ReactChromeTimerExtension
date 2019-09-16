@@ -5,14 +5,12 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports={
 	entry : {
         index : ['babel-polyfill','./app/index.js'],
-        vars : [ './app/referenceVars/paramsset.js', './app/referenceVars/loginsettings.js' ],
-        nex:  ['./app/loginPageTest.js', './app/loginRoute.js', './app/entrypoint.js', './app/routes.js', './app/appRoute.js', './app/appHomeTest.js'],
-        reactComponents : ['./app/reactComponents/appComponent.js',
-                            './app/reactComponents/nextform.js',
-                            './app/reactComponents/optionsMenu.js', 
-                            './app/reactComponents/progressTimer.js',
-                            './app/reactComponents/submitbutton.js'
-                            ]
+        entry : ['./app/entrypoint.js', './app/routes.js'],
+        refs : [ './app/referenceVars/paramsset.js', './app/referenceVars/loginsettings.js', './app/referenceVars/firebaseConfig.js' ],
+        login:  ['./app/login/loginPage.js', './app/login/signup.js'],
+        home: ['./app/apphome/appHome.js', './app/apphome/appComponent.js', './app/apphome/header.js', './app/apphome/logoutrouter.js', './app/apphome/nextform.js'],
+        reactComponents : [ './app/reactComponents/optionsMenu.js', './app/reactComponents/progressTimer.js', './app/reactComponents/submitbutton.js'],
+        firebase : ['./app/firebase/firebaseContext.js', './app/firebase/firebaseInitializer.js', './app/firebase/firebaseInstance.js']
     },
 	output : {
 		path : path.resolve(__dirname, 'dist'),

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 
 import '../index.css';
-import OptionMenu from './optionsMenu.js'
+import OptionMenu from '../reactComponents/optionsMenu.js'
 import Form from 'react-bootstrap/Form'
-import SubmitButton from './submitbutton.js'
+import SubmitButton from '../reactComponents/submitbutton.js'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withRouter } from 'react-router-dom' 
 

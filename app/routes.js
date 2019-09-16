@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom' 
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
-import AppRoute from './appRoute.js'
-import LoginRoute from './loginRoute.js'
-import AppHome from './appHome.js'
-import LoginPage from './loginPageTest.js'
+import AppHome from './apphome/appHome.js'
+import LoginPage from './login/loginPage.js'
 
 class PrivateRoute extends React.Component {
 	constructor(props) {

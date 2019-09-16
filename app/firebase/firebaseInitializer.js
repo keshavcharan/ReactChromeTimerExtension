@@ -2,7 +2,7 @@ import React, {	Component } from 'react'
 import app from 'firebase/app'
 
 var firebase = require('firebase');
-var firebaseConfigComp = require('./referenceVars/firebaseConfig')
+var firebaseConfigComp = require('../referenceVars/firebaseConfig')
 const firebaseConfig = firebaseConfigComp.firebaseConfig
 
 export default class FirebaseInitializer{	

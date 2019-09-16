@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import EntryPoint from './entrypoint.js'
-import Firebase, {	FirebaseContext } from './firebaseInstance.js'
-import PushHistory from './pushHistory.js'
+import Firebase, {	FirebaseContext } from './firebase/firebaseInstance.js'
 var fb = new Firebase()
 console.log('in index.js');
 

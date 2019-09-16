@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom' 
 import Form from 'react-bootstrap/Form'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import SubmitButton from './reactComponents/submitbutton.js'
+import SubmitButton from '../reactComponents/submitbutton.js'
 
 class LogoutRouter extends React.Component {
 	

@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import './index.css';
+import '../index.css';
 import Form from 'react-bootstrap/Form'
-import SubmitButton from './reactComponents/submitbutton.js'
+import SubmitButton from '../reactComponents/submitbutton.js'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withRouter } from 'react-router-dom' 
 import { Redirect } from 'react-router' 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import FirebaseInitializer from './firebaseInitializer.js'
+import FirebaseInitializer from '../firebase/firebaseInitializer.js'
 
 class SignUp extends React.Component {
 
