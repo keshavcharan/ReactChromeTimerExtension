@@ -13,6 +13,7 @@ async function initializeFirebase() {
     		resolve(user);
 	        console.log("Listener called")
 	        if (user) { 
+	        	fb.initializeUserSetup(user)
 	        	fb.setLoggedIn(true)
 	          	console.log("Logged in as " + user.email)
 	        } else {

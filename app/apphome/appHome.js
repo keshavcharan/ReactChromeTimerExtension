@@ -15,7 +15,7 @@ class AppHome extends React.Component {
 		return(
 			<div>
 				<Header firebaseComp={this.props.firebaseComp}/>
-				<AppComponent/>
+				<AppComponent firebaseComp={this.props.firebaseComp}/>
 			</div>
 		)
 	}

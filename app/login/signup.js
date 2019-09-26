@@ -25,7 +25,9 @@ class SignUp extends React.Component {
 		var password = this.state.password
 
 		console.log("authentication with " + email + ' ' + password)
-		this.firebaseComp.signup(email, password).then(authUser => console.log("Signup success")).catch(error => {              
+		this.firebaseComp.signup(email, password).then(authUser => {
+			console.log("Signup success")	
+		}).catch(error => {              
               var errorCode = error.code;
               var errorMessage = error.message;     
               console.log("authentication error " + errorCode + " " + errorMessage)

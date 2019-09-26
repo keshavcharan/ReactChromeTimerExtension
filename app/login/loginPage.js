@@ -15,6 +15,7 @@ class LoginPage extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.state = {	username: "", password: "" }
 		this.firebaseComp = this.props.firebaseComp
+		this.database = this.firebaseComp.db
 		this.onChange=this.onChange.bind(this)
 	}
 
@@ -28,17 +29,13 @@ class LoginPage extends React.Component {
 		this.setState({	[key] : value })
 	}
 
-	handleSubmit(event) {
+	async handleSubmit(event) {
 		event.preventDefault();
 		var email = this.state.username
 		var password = this.state.password
-
-		this.firebaseComp.signin(email, password).then(authUser => console.log("Login success " + authUser)).catch(error => {
-              console.log("authentication error")
-              var errorCode = error.code;
-              var errorMessage = error.message;     
-            }
-      	);
+		console.log('logging in')
+		await this.firebaseComp.login(email, password)
+		console.log('loggied in')
 	}
 
 	render() {

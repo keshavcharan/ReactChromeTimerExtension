@@ -5,7 +5,6 @@ import { withRouter } from 'react-router-dom'
 import { Redirect } from 'react-router' 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
-
 var params = require('../referenceVars/paramsset.js');
 
 class AppComponent extends React.Component {
@@ -14,8 +13,14 @@ class AppComponent extends React.Component {
 		this.state = {
 			dummy: 0
 		}
+		
 		this.onFormSubmit= this.onFormSubmit.bind(this);
 		this.backToForm = this.backToForm.bind(this);
+		this.firebaseComp=this.props.firebaseComp;
+		this.db = this.firebaseComp.db;
+		this.user = this.firebaseComp.getUser();
+
+	//	console.log('user data ' + this.user.uid + usersnapshot.email + " " + usersnapshot.isTaskActive);
 	}
 
 	onFormSubmit(timerval, todotext) {
