@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom'
 import { Redirect } from 'react-router' 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import FirebaseInitializer from '../firebase/firebaseInitializer.js'
+import Button from 'react-bootstrap/Button'
 
 class SignUp extends React.Component {
 
@@ -14,34 +15,42 @@ class SignUp extends React.Component {
 		super(props);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.firebaseComp = this.props.firebaseComp
+		this.logincallbackmethod=this.props.logincallback
 		this.onChange=this.onChange.bind(this)		
+		this.onloginclick = this.onloginclick.bind(this)
 		this.state = {	email: "", password: "" , retype : "", nickname : "" }		
 	}
 
-	handleSubmit(event) {
+	async handleSubmit(event) {
 		event.preventDefault();		
 		var email = this.state.email
 		email = email.toString().trim();			
 		var password = this.state.password
 
+		let useradded;
 		console.log("authentication with " + email + ' ' + password)
-		this.firebaseComp.signup(email, password).then(authUser => {
-			console.log("Signup success")	
+		await this.firebaseComp.signup(email, password).then(authUser => {
+			console.log("Signup success")
+			this.firebaseComp.signout()
+			this.onloginclick()
 		}).catch(error => {              
               var errorCode = error.code;
               var errorMessage = error.message;     
               console.log("authentication error " + errorCode + " " + errorMessage)
             }
       	);
-				
-		const {	history } = this.props
-		history.push('/')
+      	console.log("there is user")
 	}
+
 
 	onChange(event) {		
 		var key = event.target.name
 		var value = event.target.value
 		this.setState({	[key] : value })
+	}
+
+	onloginclick() {
+		this.logincallbackmethod("login")
 	}
 
 	render() {
@@ -74,7 +83,10 @@ class SignUp extends React.Component {
 						</Form.Group>																		
 						<Form.Group sm={{ span: 10, offset: 2}}>
 							<SubmitButton label="SignUp" disable={invalid} />
-						</Form.Group>					
+						</Form.Group>	
+						<Form.Group>
+							<Button variant="link" onClick={this.onloginclick}>Back to Login</Button>
+						</Form.Group>										
 					</Form>
 				</div>
 		) 

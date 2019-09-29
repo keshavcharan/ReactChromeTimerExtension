@@ -19,32 +19,48 @@ export default class FirebaseInitializer{
     this.auth = app.auth(); 
     this.db = app.firestore();
     this.loggedIn = false;     
+    this.userdata = {
+      last_start:0,
+      current_timertime: 0
+    }
 	} 
 
-  async initializeUserSetup(user) {
+  async initializeUserSetup(user, frompage) {
     const useruid=user.uid
-    console.log("initializing")
-    var doc = await this.db.collection('users').doc(user.uid).get();  
-    if (!doc) {
-      console.log('No such document!');
-      // create a document here
+    console.log("initializing " + useruid + ' ' + frompage)
+    await this.db.collection('timer_users').doc(useruid).get().then(snapshot => {
+      console.log(snapshot);
+      if(snapshot.exists) {
+        console.log('There is such document')
+      } else {
+        console.log('There is no such document')        
+        let initdata = {
+          last_start:0,
+          current_timertime:0
+        }
+        this.db.collection('timer_users').doc(useruid).set(initdata)
+      }
+    }).catch(error => {
+      console.log('Error getting document ' + error.code + ' ' + error.message)
+    });
 
-    } else {
-      // update the document here
-      console.log('Document data:', doc.data());
-    }  
-    
     console.log("initialized")
   }
 
   async login(email, password) {
-      var authUser = await this.auth.signInWithEmailAndPassword(email, password);
-      if(authUser) {
-        //initializeUserSetup(authUser)
-        console.log("Login success " + authUser)
+      var currentuser;
+      await this.auth.signInWithEmailAndPassword(email, password)
+          .then((authuser) => {
+            console.log("success")
+            currentuser=authuser
+          })
+          .catch((error) => {console.log(error.code + " " + error.message)})
+      if(currentuser) {
+        //console.log("Login success " + JSON.stringify(currentuser))
+        await this.initializeUserSetup(currentuser.user, "loginmethod")
       } else {
-        console.log("authentication error")
-      }
+        console.log("authentication error " + currentuser)
+      }      
   }
 
   getDb() {

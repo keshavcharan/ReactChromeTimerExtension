@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom'
 import { Redirect } from 'react-router' 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import FirebaseInitializer from '../firebase/firebaseInitializer.js'
+import Button from 'react-bootstrap/Button'
 
 class LoginPage extends React.Component {
 
@@ -15,8 +16,10 @@ class LoginPage extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.state = {	username: "", password: "" }
 		this.firebaseComp = this.props.firebaseComp
+		this.logincallbackmethod=this.props.logincallback
 		this.database = this.firebaseComp.db
 		this.onChange=this.onChange.bind(this)
+		this.signup = this.signup.bind(this)
 	}
 
 	componentDidMount() {	
@@ -35,7 +38,12 @@ class LoginPage extends React.Component {
 		var password = this.state.password
 		console.log('logging in')
 		await this.firebaseComp.login(email, password)
-		console.log('loggied in')
+		console.log('logged in')
+	}
+
+	signup() {
+		console.log("signing up")
+		this.logincallbackmethod("signup")
 	}
 
 	render() {
@@ -53,7 +61,10 @@ class LoginPage extends React.Component {
 						</Form.Group>		
 						<Form.Group sm={{ span: 10, offset: 2}}>
 							<SubmitButton label="Login" disable={invalid}/>
-						</Form.Group>															
+						</Form.Group>		
+						<Form.Group>
+							<Button variant="link" onClick={this.signup}>New User - Signup</Button>
+						</Form.Group>
 					</Form>
 				</div>
 		) 

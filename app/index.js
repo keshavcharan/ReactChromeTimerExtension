@@ -9,11 +9,11 @@ async function initializeFirebase() {
 	console.log("Init index");
     await new Promise((resolve, reject) => { 
     	var unsubscribe = fb.auth.onAuthStateChanged(user => {
-    		//unsubscribe();
+    		unsubscribe();
     		resolve(user);
 	        console.log("Listener called")
 	        if (user) { 
-	        	fb.initializeUserSetup(user)
+	        	fb.initializeUserSetup(user, "fromlogin")
 	        	fb.setLoggedIn(true)
 	          	console.log("Logged in as " + user.email)
 	        } else {
@@ -26,7 +26,6 @@ async function initializeFirebase() {
 					<EntryPoint firebaseclass={fb}/>
 				</div>, 
 			document.getElementById('app'));	
-    		unsubscribe();		
     	}, reject);
 	});
 

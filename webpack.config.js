@@ -7,7 +7,7 @@ module.exports={
         index : ['babel-polyfill','./app/index.js'],
         entry : ['./app/entrypoint.js', './app/routes.js'],
         refs : [ './app/referenceVars/paramsset.js', './app/referenceVars/loginsettings.js', './app/referenceVars/firebaseConfig.js' ],
-        login:  ['./app/login/loginPage.js', './app/login/signup.js'],
+        login:  ['./app/login/loginComponent.js','./app/login/loginPage.js', './app/login/signup.js'],
         home: ['./app/apphome/appHome.js', './app/apphome/appComponent.js', './app/apphome/header.js', './app/apphome/logoutrouter.js', './app/apphome/nextform.js'],
         reactComponents : [ './app/reactComponents/optionsMenu.js', './app/reactComponents/progressTimer.js', './app/reactComponents/submitbutton.js'],
         firebase : ['./app/firebase/firebaseContext.js', './app/firebase/firebaseInitializer.js', './app/firebase/firebaseInstance.js']

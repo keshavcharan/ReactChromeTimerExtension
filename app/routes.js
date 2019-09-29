@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom' 
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import AppHome from './apphome/appHome.js'
-import LoginPage from './login/loginPage.js'
+import LoginHome from './login/loginComponent.js'
 
 class PrivateRoute extends React.Component {
 	constructor(props) {
@@ -50,7 +50,7 @@ class PrivateRoute extends React.Component {
 		return (
 			<Route {...rest} render = {
 					(props) => (authed ? <AppHome {...props} firebaseComp={this.props.firebaseComp}/> : 
-						<LoginPage {...props} firebaseComp={this.props.firebaseComp}/>)
+						<LoginHome {...props} firebaseComp={this.props.firebaseComp}/>)
 				} />			
 		)
 	}
