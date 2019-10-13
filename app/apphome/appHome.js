@@ -11,7 +11,6 @@ class AppHome extends React.Component {
 	}
 
 	render() {
-		console.log("rendering")
 		return(
 			<div>
 				<Header firebaseComp={this.props.firebaseComp}/>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+	import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom' 
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import AppHome from './apphome/appHome.js'
@@ -12,8 +12,7 @@ class PrivateRoute extends React.Component {
 		}
 	}
 
-	componentDidMount() {
-		console.log('registering a listener ' + this.props.type)
+	componentWillMount() {
 		var fb = this.props.firebaseComp
 
 		if(fb.isUserLoggedIn()) {
@@ -23,28 +22,26 @@ class PrivateRoute extends React.Component {
 		}
 
     	this.unsubscribe = fb.auth.onAuthStateChanged(user => {
-	        console.log("Listener called in routes")
 	        if (user) { 
 	        	fb.setLoggedIn(true)
 	        	this.setState({ authenticated : true })
-	          	console.log("Logged in as " + user.email)
+	          	console.debug("Routes : Logged in as " + user.email)
 	        } else {
 	        	fb.setLoggedIn(false)
 	        	this.setState({ authenticated : false })
-	          	console.log("Not Authenticated")
+	          	console.debug("Routes : Not Authenticated")
 	        }
         	this.props.history.push('/')
-	    	console.log("Init exit : rendering entry point");
     	});
 	}
 
 	componentWillUnmount() {
-		console.log('unsubscribing');
+		console.debug('unsubscribing');
 		this.unsubscribe()
 	}
 
 	render() {
-		console.log('loading route ' + this.state.authenticated + ' for ' + this.props.type);
+		console.log('loading route : authenticated - ' + this.state.authenticated + ' for component - ' + this.props.type);
 		const { type : type, ...rest } = this.props
 		const authed = this.state.authenticated
 		return (
@@ -67,7 +64,6 @@ class Routes extends React.Component {
 	}
 
 	render() {
-		console.log('Creating routes')
 		return (
 			<div>
 			<Router>

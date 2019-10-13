@@ -8,8 +8,9 @@ export default class EntryPoint extends React.Component {
 	constructor(props){
 		super(props)
 	}
+	
 	render() {
-	    console.log('in entrypoint.js');
+	    console.debug('in entrypoint.js');
 		return (
 		    <Routes firebaseClass={this.props.firebaseclass}/>
 		)

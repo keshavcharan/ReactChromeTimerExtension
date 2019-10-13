@@ -18,7 +18,6 @@ class LogoutRouter extends React.Component {
 	}
 
 	render() {
-		console.log('logout router loading');
 		return(
 			<div>
 				<div>					

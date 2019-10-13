@@ -7,54 +7,65 @@ const firebaseConfig = firebaseConfigComp.firebaseConfig
 
 export default class FirebaseInitializer{	
   constructor(data) {
-
     // This class is not just for Firebase but it will have auth, db modules defined inside one class
     // Tomorrow if db changes we will include the config for db in this class itself
-    console.log(firebaseConfig)
     if(!firebase.apps.length) {
 	     app.initializeApp(firebaseConfig);
     }
-    console.log('constructor')
 
     this.auth = app.auth(); 
     this.db = app.firestore();
     this.loggedIn = false;     
     this.userdata = {
       last_start:0,
-      current_timertime: 0
+      current_timertime: 0,
+      current_task: ""
     }
 	} 
 
   async initializeUserSetup(user, frompage) {
     const useruid=user.uid
-    console.log("initializing " + useruid + ' ' + frompage)
-    await this.db.collection('timer_users').doc(useruid).get().then(snapshot => {
-      console.log(snapshot);
-      if(snapshot.exists) {
-        console.log('There is such document')
+    console.log("initializing " + useruid + ' from ' + frompage)
+    let snapshot = await this.db.collection('timer_users').doc(useruid).get()
+    console.debug("snapshot loaded " + snapshot);
+    if(snapshot.exists) {
+        let initdata = snapshot.data()
+        console.log('There is such document ' + JSON.stringify(initdata))
+        this.userdata.last_start = initdata.last_start
+        this.userdata.current_timertime = initdata.current_timertime
+        this.userdata.current_task = initdata.current_task
       } else {
         console.log('There is no such document')        
         let initdata = {
           last_start:0,
-          current_timertime:0
+          current_timertime:0,
+          current_task:""
         }
+        this.userdata = initdata
         this.db.collection('timer_users').doc(useruid).set(initdata)
       }
-    }).catch(error => {
-      console.log('Error getting document ' + error.code + ' ' + error.message)
-    });
+    console.log("initialized with user data " + JSON.stringify(this.userdata))
+  }
 
-    console.log("initialized")
+  async addToDb(dataObject, documentid, collection) {
+      console.debug("adding dataObject to db " + JSON.stringify(dataObject))
+      await this.db.collection(collection).doc(documentid).set(dataObject).then(ref => {
+        console.log("document added ") 
+        this.userdata = dataObject
+      }).catch(error => {
+        console.log("Error adding document " + error.code + " " + error.message)
+      })
+      console.debug("added dataObject to db ")      
   }
 
   async login(email, password) {
       var currentuser;
       await this.auth.signInWithEmailAndPassword(email, password)
           .then((authuser) => {
-            console.log("success")
+            console.log("login success")
             currentuser=authuser
           })
-          .catch((error) => {console.log(error.code + " " + error.message)})
+          .catch((error) => {console.log("login failed " + error.code + " " + error.message)})
       if(currentuser) {
         //console.log("Login success " + JSON.stringify(currentuser))
         await this.initializeUserSetup(currentuser.user, "loginmethod")
@@ -63,16 +74,26 @@ export default class FirebaseInitializer{
       }      
   }
 
-  getDb() {
-    return this.db;
+  getuserdata(reload) {
+    return this.userdata
+  }
+
+  async loaduserdata() {
+    console.log("test2")
+    let snapshot = await this.db.collection('timer_users').doc(this.getUser().uid).get()
+    console.debug("snapshot reloaded " + snapshot);
+    if(snapshot.exists) {
+        let initdata = snapshot.data()
+        console.log('Current values are ' + JSON.stringify(initdata))
+        this.userdata.last_start = initdata.last_start
+        this.userdata.current_timertime = initdata.current_timertime
+        this.userdata.current_task = initdata.current_task
+      } 
+    console.log("test3 " + JSON.stringify(this.userdata))
   }
 
   getUser() { 
     return this.auth.currentUser
-  }
-
-  signin(email, password) {
-    return this.auth.signInWithEmailAndPassword(email, password);
   }
 
   signup(email, password) {
@@ -84,18 +105,14 @@ export default class FirebaseInitializer{
     this.auth.signOut(); 
   }
 
-  async logout() {
-    console.log('log out');
-    return this.auth.signOut();
-  }
-
   isUserLoggedIn() {
+    console.log('user logged in ' + this.loggedIn)
     return this.loggedIn
   }
 
   setLoggedIn(loggedIn) {
     console.log('setting loggedIn to ' + loggedIn);
     this.loggedIn = loggedIn
-   }
+  }
 
 }
