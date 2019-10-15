@@ -35,7 +35,7 @@ class AppComponent extends React.Component {
 		console.log("current time " + currenttime)
 		let timerdata = {
           last_start:currenttime,
-          current_timertime:timerval*5,
+          current_timertime:timerval*60,
           current_task:todotext
         }
 
@@ -68,29 +68,30 @@ class AppComponent extends React.Component {
 
 	render() {
 		var userparams = this.userdata
+		let renderform;
+		console.log('rechecking user data ' + JSON.stringify(this.userdata))
 		if(this.starttimer === true) {
 			this.starttimer = false
-			return (<ProgressTimer timerCallback={this.backToForm} starttime={userparams.last_start} times={userparams.current_timertime}/>)
-		}
-
-		var now = parseInt(new Date().getTime()/1000)
-		let renderform;
-		let inprogress = false;
-		if (userparams.last_start > 0) {
-			const window = now - userparams.last_start
-			if (window > 0 && window <= userparams.current_timertime) {
-				inprogress = true
-			} else {
-				this.backToForm()
-			}
-		} 
-
-		if(inprogress === true) {
-			renderform = <ProgressTimer timerCallback={this.backToForm} starttime={userparams.last_start} times={userparams.current_timertime}/>
+			renderform = <ProgressTimer timerCallback={this.backToForm} taskname={userparams.current_task} starttime={userparams.last_start} times={userparams.current_timertime}/>
 		} else {
-			renderform = <NextForm submitFormCallback={this.onFormSubmit}/>
-		}
+			var now = parseInt(new Date().getTime()/1000)
+			let inprogress = false;
+			if (userparams.last_start > 0) {
+				const window = now - userparams.last_start
+				if (window > 0 && window <= userparams.current_timertime) {
+					inprogress = true
+				} else {
+					this.backToForm()
+				}
+			} 
 
+			if(inprogress === true) {
+				renderform = <ProgressTimer timerCallback={this.backToForm} taskname={userparams.current_task} starttime={userparams.last_start} times={userparams.current_timertime}/>
+			} else {
+				renderform = <NextForm submitFormCallback={this.onFormSubmit}/>
+			}
+		}
+		
 		return(
 			<div>
 				{renderform}

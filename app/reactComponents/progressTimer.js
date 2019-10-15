@@ -32,9 +32,14 @@ class ProgressTimer extends React.Component {
 	}
 
 	render() {
+		console.log('xxxxx ' + this.props.taskname)
+		const tottime = this.state.displaytime
+		const displaytimemin = ('0' + parseInt(tottime/60)).substr(-2)
+		const displaytimesec = ('0' + parseInt(tottime%60)).substr(-2)
+		
 		return(
 			<div>
-				<label>It is {this.state.displaytime}</label>
+				<label>My current Task is {this.props.taskname} until {displaytimemin}:{displaytimesec} mins</label>
 			</div>
 		);
 	}
