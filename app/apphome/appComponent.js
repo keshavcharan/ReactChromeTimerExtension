@@ -7,82 +7,88 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 //var params = require('../referenceVars/paramsset.js');
 //var dbparams
-var params = require('../referenceVars/paramsset.js');
+//var params = require('../referenceVars/paramsset.js');
 
 class AppComponent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			dummy: 0
+			dummy: false
 		}
 		
 		this.onFormSubmit= this.onFormSubmit.bind(this);
 		this.backToForm = this.backToForm.bind(this);
 		this.firebaseComp=this.props.firebaseComp;
+		this.resetdummy=this.resetdummy.bind(this);
 		this.db = this.firebaseComp.db;
 		this.user = this.firebaseComp.getUser();
-		this.dbparams1 = this.firebaseComp.getuserdata()
-
-		console.log("loading db params from App Component " + JSON.stringify(this.dbparams1))
+		this.userdata = this.firebaseComp.getuserdata()
+		this.starttimer = false
+		console.log("loading db params from App Component " + JSON.stringify(this.userdata))
 
 	//	console.log('user data ' + this.user.uid + usersnapshot.email + " " + usersnapshot.isTaskActive);
 	}
 
-	async onFormSubmit(timerval, todotext) {
+	async onFormSubmit(timerval, todotext, units) {
 		console.log("setting params");
-		params.inprogress = "true";	
-		params.timertimes.currentStartTime=new Date().getTime()/1000;
-		params.timertimes.currentTimeSet=timerval*6;
-
+		var currenttime = parseInt(new Date().getTime()/1000)
+		console.log("current time " + currenttime)
 		let timerdata = {
-          last_start:params.timertimes.currentStartTime,
-          current_timertime:timerval,
+          last_start:currenttime,
+          current_timertime:timerval*5,
           current_task:todotext
         }
 
 		await this.firebaseComp.addToDb(timerdata, this.user.uid,"timer_users")
-		let newval = this.state.dummy;
-		this.setState({dummy: newval+1});
+		this.starttimer = true
+		this.resetdummy()
+	}
+
+	resetdummy() {
+		let newval = !this.state.dummy;
+		this.setState({dummy: newval});
 	}
 
 	async backToForm() {
-		params.inprogress = "false";	
-		params.timertimes.currentStartTime=new Date().getTime()/1000;
-		params.timertimes.currentTimeSet=0;
-
 		let initdata = {
           last_start:0,
           current_timertime:0,
           current_task:""
         }
+        this.starttimer = false
         await this.firebaseComp.addToDb(initdata, this.user.uid,"timer_users")
-
-		let newval = this.state.dummy;
-		this.setState({dummy: newval-1});	
+		this.resetdummy()
 	}
 
 	componentWillUpdate() {
 		console.log('component will update')
-/*		await this.firebaseComp.loaduserdata().then(() => {
-			console.log("loading user data")
-			this.dbparams1 = this.firebaseComp.getuserdata();
-		});
-*/		this.dbparams1 = this.firebaseComp.getuserdata();
-		console.log("Component updated : dbparams are " + JSON.stringify(this.dbparams1))
+		this.userdata = this.firebaseComp.getuserdata()
+		console.log("Component updated : dbparams are " + JSON.stringify(this.userdata))
 	}
 
 	render() {
-		let renderform;
+		var userparams = this.userdata
+		if(this.starttimer === true) {
+			this.starttimer = false
+			return (<ProgressTimer timerCallback={this.backToForm} starttime={userparams.last_start} times={userparams.current_timertime}/>)
+		}
 
 		var now = parseInt(new Date().getTime()/1000)
-		var dbparams = this.dbparams1
-		const inprogress = (dbparams.last_start > 0) && (dbparams.last_start > now)
-		
-		console.log('@@@@@ ' + now + ' ' + inprogress + ' ' + dbparams.last_start + ' ' + dbparams.current_task)
-		if(params.inprogress == "true") {
-			renderform = <ProgressTimer timerCallback={this.backToForm} starttime={params.timertimes.currentStartTime} times={params.timertimes.currentTimeSet}/>;
+		let renderform;
+		let inprogress = false;
+		if (userparams.last_start > 0) {
+			const window = now - userparams.last_start
+			if (window > 0 && window <= userparams.current_timertime) {
+				inprogress = true
+			} else {
+				this.backToForm()
+			}
+		} 
+
+		if(inprogress === true) {
+			renderform = <ProgressTimer timerCallback={this.backToForm} starttime={userparams.last_start} times={userparams.current_timertime}/>
 		} else {
-			renderform = <NextForm submitFormCallback={this.onFormSubmit}/>;
+			renderform = <NextForm submitFormCallback={this.onFormSubmit}/>
 		}
 
 		return(

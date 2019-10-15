@@ -16,26 +16,25 @@ class NextForm extends React.Component {
 		this.state = {
 			timertime: 0,
 			todotext: "To Do",
-			dummy : "false"
+			units : "minutes"
 		};
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
-		this.handleTimerValueChange = this.handleTimerValueChange.bind(this);
+		this.handleFieldChange = this.handleFieldChange.bind(this);
 	}
 
 	handleSubmit(event) {
 		event.preventDefault();
-		const t = this.state.timertime;
+		const timer = this.state.timertime;
 		const todo = this.state.todotext;
-		this.props.submitFormCallback(t, todo);
+		const unit = this.state.units
+		this.props.submitFormCallback(timer, todo, unit);
 	}
 
-	handleTextAreaChange(event) {
-		this.setState( { todotext: event.target.value })
-	}
-
-	handleTimerValueChange(event) {
-		this.setState( { timertime: event.target.value })
+	handleFieldChange(event) {
+		let key = event.target.name
+		let val = event.target.value
+		console.log('setting ' + key + ' to ' + val)
+		this.setState({ [key]: val })
 	}
 
 	render() {
@@ -46,14 +45,14 @@ class NextForm extends React.Component {
 							<Form.Label>NEXT, I wanna complete</Form.Label>
 						</Form.Group>
 						<Form.Group>
-							<Form.Control as="textarea" rows="3" onChange={this.handleTextAreaChange}/>
+							<Form.Control as="textarea" name="todotext" rows="3" onChange={this.handleFieldChange}/>
 						</Form.Group>
 						<Form.Group>
 							<Form.Label>in</Form.Label>
 						</Form.Group>
 						<Form.Group>
-							<Form.Control id="hours_val" type="text" placeholder="1" onChange={this.handleTimerValueChange}/>
-							<OptionMenu/>
+							<Form.Control id="hours_val" type="text" name="timertime" placeholder="1" onChange={this.handleFieldChange}/>
+							<OptionMenu menuname="units" changeevent={this.handleFieldChange}/>
 						</Form.Group>
 						<Form.Group sm={{ span: 10, offset: 2}}>
 							<SubmitButton label="Set" />

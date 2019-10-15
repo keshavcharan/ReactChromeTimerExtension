@@ -15,7 +15,7 @@ class OptionMenu extends React.Component {
 		});
 
 		return(
-			<select id="hours_type"> 
+			<select name="{this.props.menuname}" onChange={this.props.changeevent} id="hours_type"> 
 				{opts}
 			</select>
 		)

@@ -35,7 +35,7 @@ export default class FirebaseInitializer{
         this.userdata.current_timertime = initdata.current_timertime
         this.userdata.current_task = initdata.current_task
       } else {
-        console.log('There is no such document')        
+        console.log('There is no such document')
         let initdata = {
           last_start:0,
           current_timertime:0,
@@ -44,7 +44,7 @@ export default class FirebaseInitializer{
         this.userdata = initdata
         this.db.collection('timer_users').doc(useruid).set(initdata)
       }
-    console.log("initialized with user data " + JSON.stringify(this.userdata))
+      console.log("initialized with user data " + JSON.stringify(this.userdata))
   }
 
   async addToDb(dataObject, documentid, collection) {
@@ -89,7 +89,7 @@ export default class FirebaseInitializer{
         this.userdata.current_timertime = initdata.current_timertime
         this.userdata.current_task = initdata.current_task
       } 
-    console.log("test3 " + JSON.stringify(this.userdata))
+      console.log("test3 " + JSON.stringify(this.userdata))
   }
 
   getUser() { 
