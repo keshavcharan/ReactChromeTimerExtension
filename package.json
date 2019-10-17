@@ -18,8 +18,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "create": "webpack",
-    "dev": "webpack-dev-server --port 8001 --open",
-    "heroku-postbuild": "webpack -p"
+    "start": "webpack-dev-server --port 8001 --host 0.0.0.0"
   },
   "keywords": [],
   "author": "",
