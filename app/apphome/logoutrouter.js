@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom'
 import Form from 'react-bootstrap/Form'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SubmitButton from '../reactComponents/submitbutton.js'
+import ImageButton from '../reactComponents/imagebutton.js'
 
 class LogoutRouter extends React.Component {
 	
@@ -23,7 +24,7 @@ class LogoutRouter extends React.Component {
 				<div>					
 					<Form id="logoutform" onSubmit={this.handleLogout}>
 						<Form.Group sm={{ span: 10, offset: 2}}>
-							<SubmitButton label="Logout" />
+							<ImageButton label="Logout" />
 						</Form.Group>					
 					</Form>
 				</div>
