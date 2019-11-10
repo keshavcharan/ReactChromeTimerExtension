@@ -1,0 +1,7 @@
+dist/**
+node_modules/**
+*.bkp
+<<<<<<< HEAD
+=======
+app/referenceVars/firebaseConfig.js
+>>>>>>> 206afc349441dead5b4280a17495ce0e2a26346a

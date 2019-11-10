@@ -13,7 +13,7 @@ class AppHome extends React.Component {
 	render() {
 		return(
 			<div>
-				<Header firebaseComp={this.props.firebaseComp}/>
+				<Header firebaseComp={this.props.firebaseComp} reloadCallback={this.props.reloadCallback}/>
 				<AppComponent firebaseComp={this.props.firebaseComp}/>
 			</div>
 		)

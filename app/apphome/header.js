@@ -13,7 +13,7 @@ class Header extends React.Component {
 	render() {
 		return(
 			<div>
-		      	<LogoutRouter firebaseComp={this.props.firebaseComp}/>
+		      	<LogoutRouter firebaseComp={this.props.firebaseComp} reloadCallback={this.props.reloadCallback}/>
 			</div>
 		)
 	}

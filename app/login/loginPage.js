@@ -36,8 +36,10 @@ class LoginPage extends React.Component {
 		event.preventDefault();
 		var email = this.state.username
 		var password = this.state.password
+
 		console.log('logging in')
 		await this.firebaseComp.login(email, password)
+		this.props.reloadCallback(false)
 		console.log('logged in')
 	}
 

@@ -25,11 +25,11 @@ class LoginComponent extends React.Component {
 	render() {
 		let renderpage;
 		if(this.navigatetopage == "login") {
-			renderpage = <Login firebaseComp={this.props.firebaseComp} logincallback={this.topage}/>
+			renderpage = <Login firebaseComp={this.props.firebaseComp} logincallback={this.topage} reloadCallback={this.props.reloadCallback}/>
 		} else if(this.navigatetopage == "signup") {
 			renderpage = <SignUp firebaseComp={this.props.firebaseComp} logincallback={this.topage}/>
 		} else {
-			renderpage = <Login firebaseComp={this.props.firebaseComp} logincallback={this.topage}/>
+			renderpage = <Login firebaseComp={this.props.firebaseComp} logincallback={this.topage} reloadCallback={this.props.reloadCallback}/>
 		}
 		
 		return(

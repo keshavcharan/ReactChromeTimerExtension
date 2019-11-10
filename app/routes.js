@@ -8,31 +8,20 @@ class PrivateRoute extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {	
-			authenticated : false
+			login_authenticated : false
 		}
+		this.authenticated = false
+		this.reloadRoute = this.reloadRoute.bind(this)
 	}
 
 	componentWillMount() {
 		var fb = this.props.firebaseComp
-
+		console.log('component mounting')
 		if(fb.isUserLoggedIn()) {
-			this.setState({ authenticated : true })
+        	this.setState({ login_authenticated : true })
 		} else {
-			this.setState({ authenticated : false })
+        	this.setState({ login_authenticated : false })
 		}
-
-    	this.unsubscribe = fb.auth.onAuthStateChanged(user => {
-	        if (user) { 
-	        	fb.setLoggedIn(true)
-	        	this.setState({ authenticated : true })
-	          	console.debug("Routes : Logged in as " + user.email)
-	        } else {
-	        	fb.setLoggedIn(false)
-	        	this.setState({ authenticated : false })
-	          	console.debug("Routes : Not Authenticated")
-	        }
-        	this.props.history.push('/')
-    	});
 	}
 
 	componentWillUnmount() {
@@ -40,14 +29,23 @@ class PrivateRoute extends React.Component {
 		this.unsubscribe()
 	}
 
+	reloadRoute(logout) {
+		console.log('reloading to / ' + logout);
+		if (logout === true) {
+        	this.setState({ login_authenticated : false })
+		} else {
+	        this.setState({ login_authenticated : true })
+		}
+	}
+
 	render() {
-		console.log('loading route : authenticated - ' + this.state.authenticated + ' for component - ' + this.props.type);
+		console.log('loading route : authenticated - ' + this.state.login_authenticated + ' for component - ' + this.props.type);
 		const { type : type, ...rest } = this.props
-		const authed = this.state.authenticated
+		const authed = this.state.login_authenticated
 		return (
 			<Route {...rest} render = {
-					(props) => (authed ? <AppHome {...props} firebaseComp={this.props.firebaseComp}/> : 
-						<LoginHome {...props} firebaseComp={this.props.firebaseComp}/>)
+					(props) => (authed ? <AppHome {...props} reloadCallback={this.reloadRoute} firebaseComp={this.props.firebaseComp}/> : 
+						<LoginHome {...props} reloadCallback={this.reloadRoute} firebaseComp={this.props.firebaseComp}/>)
 				} />			
 		)
 	}

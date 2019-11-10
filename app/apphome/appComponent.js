@@ -32,10 +32,10 @@ class AppComponent extends React.Component {
 	async onFormSubmit(timerval, todotext, units) {
 		console.log("setting params");
 		var currenttime = parseInt(new Date().getTime()/1000)
-		console.log("current time " + currenttime)
+		console.log("current time " + currenttime + ' ' + units)
 		let timerdata = {
           last_start:currenttime,
-          current_timertime:timerval*60,
+          current_timertime:(units === "Hours") ? timerval*60 : timerval*3600,
           current_task:todotext
         }
 
