@@ -19,14 +19,24 @@ export default class FirebaseInitializer{
     this.userdata = {
       last_start:0,
       current_timertime: 0,
-      current_task: ""
+      current_task: "",
+      historical_data : []
     }
 	} 
 
   async initializeUserSetup(user, frompage) {
     const useruid=user.uid
     console.log("initializing " + useruid + ' from ' + frompage)
-    let snapshot = await this.db.collection('timer_users').doc(useruid).get()
+
+    var userdoc = {"collection" :{
+      "name":"timer_users",
+      "document":{
+        "name":useruid,
+        "limit":10
+      }
+    }}
+    console.debug("loading snapshot");
+    let snapshot = await this.getDocument(userdoc)
     console.debug("snapshot loaded " + snapshot);
     if(snapshot.exists) {
         let initdata = snapshot.data()
@@ -34,28 +44,105 @@ export default class FirebaseInitializer{
         this.userdata.last_start = initdata.last_start
         this.userdata.current_timertime = initdata.current_timertime
         this.userdata.current_task = initdata.current_task
+        this.getHistoricalData(useruid)
       } else {
         console.log('There is no such document')
         let initdata = {
           last_start:0,
           current_timertime:0,
-          current_task:""
+          current_task:"",
+          historical_data: []
         }
-        this.userdata = initdata
         this.db.collection('timer_users').doc(useruid).set(initdata)
       }
       console.log("initialized with user data " + JSON.stringify(this.userdata))
   }
 
-  async addToDb(dataObject, documentid, collection) {
-      console.debug("adding dataObject to db " + JSON.stringify(dataObject))
-      await this.db.collection(collection).doc(documentid).set(dataObject).then(ref => {
-        console.log("document added ") 
-        this.userdata = dataObject
-      }).catch(error => {
-        console.log("Error adding document " + error.code + " " + error.message)
-      })
-      console.debug("added dataObject to db ")      
+  async getDocument(nestedCollectionObject) {
+    var collectionCallback;
+    var init = false;
+    while(nestedCollectionObject !== undefined && (nestedCollectionObject.hasOwnProperty("collection") || nestedCollectionObject.hasOwnProperty("document"))) {
+      console.log(JSON.stringify("collection object is " + nestedCollectionObject))
+      if(nestedCollectionObject.hasOwnProperty("collection")) {
+        var collname = nestedCollectionObject.collection.name;
+        nestedCollectionObject = nestedCollectionObject.collection;
+        if(collname !== "") {
+          if(init === false) {
+            collectionCallback = this.db.collection(collname)
+          } else {
+            collectionCallback = collectionCallback.collection(collname)
+          }   
+          init = true;       
+        }
+      } else if(nestedCollectionObject.hasOwnProperty("document")) {
+        var docname = nestedCollectionObject.document.name;
+        nestedCollectionObject = nestedCollectionObject.document
+        if(docname != "") {
+          collectionCallback = collectionCallback.doc(docname) 
+        }
+      }
+    }
+    return collectionCallback.get()
+  }
+
+  async getHistoricalData(useruid) {
+    var historydocs = {
+        "collection" :{
+        "name":"timer_users",
+        "document":{
+          "name":useruid,
+          "collection": {
+            "name": "history"
+          }
+        }
+      }
+    }
+
+    const history = []
+    let snapshot = await this.getDocument(historydocs)
+    snapshot.docs.map(doc => {
+      history.push(doc.data())
+      console.log(doc.data())
+    })
+
+    this.userdata.historical_data = history
+  }
+
+  async addToDb(dataObject, nestedCollectionObject) {
+    console.log("adding dataObject to db " + JSON.stringify(dataObject))
+    var collectionCallback;
+    var init = false;
+      console.log(JSON.stringify(nestedCollectionObject))
+
+    while(nestedCollectionObject !== undefined && (nestedCollectionObject.hasOwnProperty("collection") || nestedCollectionObject.hasOwnProperty("document"))) {
+      console.log(JSON.stringify("collection object is " + nestedCollectionObject))
+      if(nestedCollectionObject.hasOwnProperty("collection")) {
+        var collname = nestedCollectionObject.collection.name;
+        nestedCollectionObject = nestedCollectionObject.collection;
+        if(collname !== "") {
+          if(init === false) {
+            collectionCallback = this.db.collection(collname)
+          } else {
+            collectionCallback = collectionCallback.collection(collname)
+          }   
+          init = true;       
+        }
+      } else if(nestedCollectionObject.hasOwnProperty("document")) {
+        var docname = nestedCollectionObject.document.name;
+        nestedCollectionObject = nestedCollectionObject.document
+        if(docname != "") {
+          collectionCallback = collectionCallback.doc(String(docname)) 
+        }
+      }
+    }
+
+    await collectionCallback.set(dataObject).then(ref => {
+       console.log("document added ") 
+       this.userdata = dataObject
+    }).catch(error => {
+      console.log("Error adding document " + error.code + " " + error.message)
+    })
+    console.debug("added dataObject to db ")      
   }
 
   async login(email, password) {
@@ -77,6 +164,11 @@ export default class FirebaseInitializer{
   getuserdata(reload) {
     return this.userdata
   }
+
+/*  async loadSubFromCollection(documentid, collection) {
+    await this.db.collection(collection).doc(document)
+  }*/
+
 
   async loaduserdata() {
     console.log("test2")

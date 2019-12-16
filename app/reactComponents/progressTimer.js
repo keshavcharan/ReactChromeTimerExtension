@@ -19,7 +19,7 @@ class ProgressTimer extends React.Component {
 	countdown() {
 		var showtime = this.getTimerTime();
 		if(showtime <= 0) {
-			this.props.timerCallback();		
+			this.props.timerCallback(this.props.starttime, this.props.taskname, true);		
 		} else {
 			this.setState ({
 				displaytime : showtime

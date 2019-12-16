@@ -32,14 +32,25 @@ class TimerComponent extends React.Component {
 	async onFormSubmit(timerval, todotext, units) {
 		console.log("setting params");
 		var currenttime = parseInt(new Date().getTime()/1000)
+		var settime = (units === "Hours") ? timerval*3600 : timerval*60
 		console.log("current time " + currenttime + ' ' + units)
+
 		let timerdata = {
           last_start:currenttime,
-          current_timertime:(units === "Hours") ? timerval*60 : timerval*3600,
+          current_timertime:settime,
           current_task:todotext
         }
 
-		await this.firebaseComp.addToDb(timerdata, this.user.uid,"timer_users")
+        let dbObj = {
+        	"collection" : {
+        		"name" : "timer_users",
+        		"document" : {
+        			"name" : this.user.uid
+        		}
+        	}
+        }
+
+		await this.firebaseComp.addToDb(timerdata, dbObj)
 		this.starttimer = true
 		this.resetdummy()
 	}
@@ -49,14 +60,47 @@ class TimerComponent extends React.Component {
 		this.setState({dummy: newval});
 	}
 
-	async backToForm() {
+	async backToForm(starttime, taskname, complete) {
 		let initdata = {
-          last_start:0,
-          current_timertime:0,
-          current_task:""
+          "last_start":0,
+          "current_timertime":0,
+          "current_task":""
         }
+
+        let initObj = {
+        	"collection" : {
+        		"name" : "timer_users",
+        		"document" : {
+        			"name" : this.user.uid
+        		}
+        	}
+        }
+
+
+        let historyObj = {
+        	"collection" : {
+        		"name" : "timer_users",
+        		"document" : {
+        			"name" : this.user.uid,
+        			"collection" : {
+        				name : "history",
+        				"document" : {
+        					"name" : starttime
+        				}
+        			}
+        		}
+        	}
+        }
+
+        let historydata = {
+        	"start" : starttime,
+        	"task" : taskname,
+        	"completed" : complete
+        }
+
         this.starttimer = false
-        await this.firebaseComp.addToDb(initdata, this.user.uid,"timer_users")
+        await this.firebaseComp.addToDb(initdata, initObj)
+        this.firebaseComp.addToDb(historydata, historyObj)
 		this.resetdummy()
 	}
 
