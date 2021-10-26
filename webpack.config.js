@@ -33,9 +33,9 @@ module.exports={
             template : 'app/index.html'
             //chunks : ['index', 'bg']
         }),
-         new CopyWebpackPlugin([
-            { from: 'static' }, {from : './app/resources/images'}
-        ])
+         new CopyWebpackPlugin({
+            patterns: [{ from: 'static' }, {from : './app/resources/images'}]            
+        })
 /*        new HtmlWebpackPlugin ({
             filename : 'running.html',
             template : 'app/running.html',
