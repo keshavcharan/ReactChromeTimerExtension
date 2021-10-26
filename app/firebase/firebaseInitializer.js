@@ -1,7 +1,9 @@
 import React, {	Component } from 'react'
-import app from 'firebase/app'
+import { initializeApp } from 'firebase/app'
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, collection, getDocs, getDoc, doc } from 'firebase/firestore'
 
-var firebase = require('firebase');
+//var firebase = require('firebase');
 var firebaseConfigComp = require('../referenceVars/firebaseConfig')
 const firebaseConfig = firebaseConfigComp.firebaseConfig
 
@@ -9,12 +11,10 @@ export default class FirebaseInitializer{
   constructor(data) {
     // This class is not just for Firebase but it will have auth, db modules defined inside one class
     // Tomorrow if db changes we will include the config for db in this class itself
-    if(!firebase.apps.length) {
-	     app.initializeApp(firebaseConfig);
-    }
-
-    this.auth = app.auth(); 
-    this.db = app.firestore();
+    const app = initializeApp(firebaseConfig);
+    
+    this.auth = getAuth(); 
+    this.db = getFirestore(app);
     this.loggedIn = false;     
     this.userdata = {
       last_start:0,
@@ -53,12 +53,12 @@ export default class FirebaseInitializer{
           current_task:"",
           historical_data: []
         }
-        this.db.collection('timer_users').doc(useruid).set(initdata)
+        collection(this.db, 'timer_users').doc(useruid).set(initdata)
       }
       console.log("initialized with user data " + JSON.stringify(this.userdata))
   }
 
-  async getDocument(nestedCollectionObject) {
+/*  async getDocument(nestedCollectionObject) {
     var collectionCallback;
     var init = false;
     while(nestedCollectionObject !== undefined && (nestedCollectionObject.hasOwnProperty("collection") || nestedCollectionObject.hasOwnProperty("document"))) {
@@ -68,9 +68,9 @@ export default class FirebaseInitializer{
         nestedCollectionObject = nestedCollectionObject.collection;
         if(collname !== "") {
           if(init === false) {
-            collectionCallback = this.db.collection(collname)
+            collectionCallback = collection(this.db, collname)
           } else {
-            collectionCallback = collectionCallback.collection(collname)
+            collectionCallback = collectionCallback.collection(this.db, collname)
           }   
           init = true;       
         }
@@ -78,11 +78,41 @@ export default class FirebaseInitializer{
         var docname = nestedCollectionObject.document.name;
         nestedCollectionObject = nestedCollectionObject.document
         if(docname != "") {
-          collectionCallback = collectionCallback.doc(docname) 
+          collectionCallback = collectionCallback.doc(this.db, docname) 
         }
       }
     }
     return collectionCallback.get()
+  }
+*/
+
+  async getDocument(nestedCollectionObject) {
+      console.log(nestedCollectionObject)
+      var collectionCallback;
+      let collectionCallbackString = '';
+      let isDoc = false;
+      while(nestedCollectionObject !== undefined && (nestedCollectionObject.hasOwnProperty("collection") || nestedCollectionObject.hasOwnProperty("document"))) {        
+        if(nestedCollectionObject.hasOwnProperty("collection")) {
+          nestedCollectionObject = nestedCollectionObject.collection
+          collectionCallbackString = collectionCallbackString.concat(nestedCollectionObject.name);
+          isDoc = false;
+        } else if(nestedCollectionObject.hasOwnProperty("document")) {
+          nestedCollectionObject = nestedCollectionObject.document
+          collectionCallbackString = collectionCallbackString.concat(nestedCollectionObject.name);
+          isDoc = true;
+        }
+        collectionCallbackString = collectionCallbackString.concat('/');
+      }      
+      collectionCallbackString = collectionCallbackString.substring(0, collectionCallbackString.length - 1);
+      console.log(collectionCallbackString)
+      if(isDoc) {
+        collectionCallback = doc(this.db, collectionCallbackString)
+        return getDoc(collectionCallback)
+      } else {
+        collectionCallback = collection(this.db, collectionCallbackString)
+        return collectionCallback
+      }
+      
   }
 
   async getHistoricalData(useruid) {
@@ -121,9 +151,9 @@ export default class FirebaseInitializer{
         nestedCollectionObject = nestedCollectionObject.collection;
         if(collname !== "") {
           if(init === false) {
-            collectionCallback = this.db.collection(collname)
+            collectionCallback = collection(this.db, collname)
           } else {
-            collectionCallback = collectionCallback.collection(collname)
+            collectionCallback = collectionCallback.collection(this.db, collname)
           }   
           init = true;       
         }
@@ -147,7 +177,7 @@ export default class FirebaseInitializer{
 
   async login(email, password) {
       var currentuser;
-      await this.auth.signInWithEmailAndPassword(email, password)
+      await signInWithEmailAndPassword(this.auth, email, password)
           .then((authuser) => {
             console.log("login success")
             currentuser=authuser
@@ -155,7 +185,7 @@ export default class FirebaseInitializer{
           .catch((error) => {console.log("login failed " + error.code + " " + error.message)})
       if(currentuser) {
         //console.log("Login success " + JSON.stringify(currentuser))
-        await this.initializeUserSetup(currentuser.user, "loginmethod")
+        await initializeUserSetup(currentuser.user, "loginmethod")
       } else {
         console.log("authentication error " + currentuser)
       }      
@@ -172,7 +202,7 @@ export default class FirebaseInitializer{
 
   async loaduserdata() {
     console.log("test2")
-    let snapshot = await this.db.collection('timer_users').doc(this.getUser().uid).get()
+    let snapshot = await collection(this.db, 'timer_users').doc(this.getUser().uid).get()
     console.debug("snapshot reloaded " + snapshot);
     if(snapshot.exists) {
         let initdata = snapshot.data()
@@ -189,12 +219,12 @@ export default class FirebaseInitializer{
   }
 
   signup(email, password) {
-    return this.auth.createUserWithEmailAndPassword(email, password);
+    return createUserWithEmailAndPassword(this.auth, email, password);
   }
 
   async signout() {
     console.log('signing out');
-    await this.auth.signOut(); 
+    await signOut(this.auth); 
   }
 
   isUserLoggedIn() {
