@@ -19,7 +19,6 @@ class AppComponent extends React.Component {
 	}
 
 	render() {
-		console.log('nnnn')
 		return (
 			<Tabs id="apptabs" activeKey={this.state.tabkey} onSelect={this.refreshTab}>
 				<Tab eventKey="timer" title="Timer">

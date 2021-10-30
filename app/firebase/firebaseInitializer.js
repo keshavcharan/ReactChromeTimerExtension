@@ -1,7 +1,7 @@
 import React, {	Component } from 'react'
 import { initializeApp } from 'firebase/app'
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, collection, getDocs, getDoc, doc } from 'firebase/firestore'
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { getFirestore, collection, getDocs, getDoc, setDoc, doc } from 'firebase/firestore'
 
 //var firebase = require('firebase');
 var firebaseConfigComp = require('../referenceVars/firebaseConfig')
@@ -58,37 +58,23 @@ export default class FirebaseInitializer{
       console.log("initialized with user data " + JSON.stringify(this.userdata))
   }
 
-/*  async getDocument(nestedCollectionObject) {
-    var collectionCallback;
-    var init = false;
-    while(nestedCollectionObject !== undefined && (nestedCollectionObject.hasOwnProperty("collection") || nestedCollectionObject.hasOwnProperty("document"))) {
-      console.log(JSON.stringify("collection object is " + nestedCollectionObject))
-      if(nestedCollectionObject.hasOwnProperty("collection")) {
-        var collname = nestedCollectionObject.collection.name;
-        nestedCollectionObject = nestedCollectionObject.collection;
-        if(collname !== "") {
-          if(init === false) {
-            collectionCallback = collection(this.db, collname)
-          } else {
-            collectionCallback = collectionCallback.collection(this.db, collname)
-          }   
-          init = true;       
-        }
-      } else if(nestedCollectionObject.hasOwnProperty("document")) {
-        var docname = nestedCollectionObject.document.name;
-        nestedCollectionObject = nestedCollectionObject.document
-        if(docname != "") {
-          collectionCallback = collectionCallback.doc(this.db, docname) 
-        }
-      }
-    }
-    return collectionCallback.get()
-  }
-*/
-
   async getDocument(nestedCollectionObject) {
       console.log(nestedCollectionObject)
       var collectionCallback;
+      var collectionCallbackStringObj = this.getCallbackString(nestedCollectionObject)
+      var collectionCallbackString = collectionCallbackStringObj.callbackString
+      var isDoc = collectionCallbackStringObj.isDoc
+      console.debug('Callback String' + JSON.stringify(collectionCallbackStringObj))
+      if(isDoc) {
+        collectionCallback = doc(this.db, collectionCallbackString)
+        return getDoc(collectionCallback)
+      } else {
+        collectionCallback = getDocs(collection(this.db, collectionCallbackString))
+        return collectionCallback
+      }      
+  }
+
+  getCallbackString(nestedCollectionObject) {
       let collectionCallbackString = '';
       let isDoc = false;
       while(nestedCollectionObject !== undefined && (nestedCollectionObject.hasOwnProperty("collection") || nestedCollectionObject.hasOwnProperty("document"))) {        
@@ -105,14 +91,7 @@ export default class FirebaseInitializer{
       }      
       collectionCallbackString = collectionCallbackString.substring(0, collectionCallbackString.length - 1);
       console.log(collectionCallbackString)
-      if(isDoc) {
-        collectionCallback = doc(this.db, collectionCallbackString)
-        return getDoc(collectionCallback)
-      } else {
-        collectionCallback = collection(this.db, collectionCallbackString)
-        return collectionCallback
-      }
-      
+      return {"isDoc" : isDoc, "callbackString" : collectionCallbackString}
   }
 
   async getHistoricalData(useruid) {
@@ -130,43 +109,24 @@ export default class FirebaseInitializer{
 
     const history = []
     let snapshot = await this.getDocument(historydocs)
-    snapshot.docs.map(doc => {
-      history.push(doc.data())
-      console.log(doc.data())
+    
+    let documents = snapshot.docs.map(doc => {
+      history.push(doc.data()); 
+      console.log(doc.data())     
     })
 
-    this.userdata.historical_data = history
+    this.userdata.historical_data = history    
   }
 
   async addToDb(dataObject, nestedCollectionObject) {
     console.log("adding dataObject to db " + JSON.stringify(dataObject))
     var collectionCallback;
     var init = false;
-      console.log(JSON.stringify(nestedCollectionObject))
 
-    while(nestedCollectionObject !== undefined && (nestedCollectionObject.hasOwnProperty("collection") || nestedCollectionObject.hasOwnProperty("document"))) {
-      console.log(JSON.stringify("collection object is " + nestedCollectionObject))
-      if(nestedCollectionObject.hasOwnProperty("collection")) {
-        var collname = nestedCollectionObject.collection.name;
-        nestedCollectionObject = nestedCollectionObject.collection;
-        if(collname !== "") {
-          if(init === false) {
-            collectionCallback = collection(this.db, collname)
-          } else {
-            collectionCallback = collectionCallback.collection(this.db, collname)
-          }   
-          init = true;       
-        }
-      } else if(nestedCollectionObject.hasOwnProperty("document")) {
-        var docname = nestedCollectionObject.document.name;
-        nestedCollectionObject = nestedCollectionObject.document
-        if(docname != "") {
-          collectionCallback = collectionCallback.doc(String(docname)) 
-        }
-      }
-    }
-
-    await collectionCallback.set(dataObject).then(ref => {
+    console.log(JSON.stringify(nestedCollectionObject))
+    var collectionCallback;
+    let collectionCallbackString = this.getCallbackString(nestedCollectionObject).callbackString;
+    await setDoc(doc(this.db, collectionCallbackString), dataObject).then(ref => {
        console.log("document added ") 
        this.userdata = dataObject
     }).catch(error => {
@@ -185,7 +145,7 @@ export default class FirebaseInitializer{
           .catch((error) => {console.log("login failed " + error.code + " " + error.message)})
       if(currentuser) {
         //console.log("Login success " + JSON.stringify(currentuser))
-        await initializeUserSetup(currentuser.user, "loginmethod")
+        await this.initializeUserSetup(currentuser.user, "loginmethod")
       } else {
         console.log("authentication error " + currentuser)
       }      
@@ -194,10 +154,6 @@ export default class FirebaseInitializer{
   getuserdata(reload) {
     return this.userdata
   }
-
-/*  async loadSubFromCollection(documentid, collection) {
-    await this.db.collection(collection).doc(document)
-  }*/
 
 
   async loaduserdata() {
