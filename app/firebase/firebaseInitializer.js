@@ -118,17 +118,28 @@ export default class FirebaseInitializer{
     this.userdata.historical_data = history    
   }
 
-  async addToDb(dataObject, nestedCollectionObject) {
+  async addToDb(dataObject, nestedCollectionObject, refreshHistory) {
     console.log("adding dataObject to db " + JSON.stringify(dataObject))
     var collectionCallback;
     var init = false;
-
-    console.log(JSON.stringify(nestedCollectionObject))
+    console.debug("nestedCollectionObject is " + JSON.stringify(nestedCollectionObject))
     var collectionCallback;
     let collectionCallbackString = this.getCallbackString(nestedCollectionObject).callbackString;
-    await setDoc(doc(this.db, collectionCallbackString), dataObject).then(ref => {
-       console.log("document added ") 
-       this.userdata = dataObject
+    let historyCallbackString = collectionCallbackString.concat("/history");    
+    await setDoc(doc(this.db, collectionCallbackString), dataObject).then(async(ref) => {
+      let history = []      
+      if(refreshHistory) {        
+        await getDocs(collection(this.db, historyCallbackString)).then((snapshot) => {
+          snapshot.docs.map(doc => {
+            history.push(doc.data()); 
+          })
+        }
+        )
+      } else {
+        history = this.userdata.historical_data       
+      }      
+      this.userdata = dataObject
+      this.userdata.historical_data = history
     }).catch(error => {
       console.log("Error adding document " + error.code + " " + error.message)
     })

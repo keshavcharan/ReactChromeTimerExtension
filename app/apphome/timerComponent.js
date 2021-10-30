@@ -26,13 +26,13 @@ class TimerComponent extends React.Component {
 		this.starttimer = false
 		console.log("loading db params from App Component " + JSON.stringify(this.userdata))
 
-	//	console.log('user data ' + this.user.uid + usersnapshot.email + " " + usersnapshot.isTaskActive);
 	}
 
 	async onFormSubmit(timerval, todotext, units) {
 		console.log("setting params");
 		var currenttime = parseInt(new Date().getTime()/1000)
-		var settime = (units === "Hours") ? timerval*3600 : timerval*60
+		//var settime = (units === "Hours") ? timerval*3600 : timerval*60
+		var settime = timerval*3
 		console.log("current time " + currenttime + ' ' + units)
 
 		let timerdata = {
@@ -50,7 +50,7 @@ class TimerComponent extends React.Component {
         	}
         }
 
-		await this.firebaseComp.addToDb(timerdata, dbObj)
+		await this.firebaseComp.addToDb(timerdata, dbObj, false)
 		this.starttimer = true
 		this.resetdummy()
 	}
@@ -76,7 +76,6 @@ class TimerComponent extends React.Component {
         	}
         }
 
-
         let historyObj = {
         	"collection" : {
         		"name" : "timer_users",
@@ -99,8 +98,8 @@ class TimerComponent extends React.Component {
         }
 
         this.starttimer = false
-        await this.firebaseComp.addToDb(initdata, initObj)
-        this.firebaseComp.addToDb(historydata, historyObj)
+        await this.firebaseComp.addToDb(historydata, historyObj, false)
+        await this.firebaseComp.addToDb(initdata, initObj, true)
 		this.resetdummy()
 	}
 
