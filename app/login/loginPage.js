@@ -61,8 +61,6 @@ class LoginPage extends React.Component {
 		var password = this.state.password
 		var loginfail = this.state.loginfail
 		const invalid = username === "" || password === ""
-		console.log("xxxxx")
-		console.log(loginfail)
 		return (
 				<div>	
 					<Form id="loginform" onSubmit={this.handleSubmit}>
