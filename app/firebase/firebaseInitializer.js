@@ -148,10 +148,12 @@ export default class FirebaseInitializer{
 
   async login(email, password) {
       var currentuser;
+      var loginsuccess = false;
       await signInWithEmailAndPassword(this.auth, email, password)
           .then((authuser) => {
             console.log("login success")
             currentuser=authuser
+            loginsuccess = true
           })
           .catch((error) => {console.log("login failed " + error.code + " " + error.message)})
       if(currentuser) {
@@ -160,6 +162,8 @@ export default class FirebaseInitializer{
       } else {
         console.log("authentication error " + currentuser)
       }      
+      console.log(loginsuccess)
+      return loginsuccess
   }
 
   getuserdata(reload) {
